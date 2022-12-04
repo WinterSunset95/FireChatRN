@@ -13,6 +13,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@fortawesome/react-native-fontawesome": "^0.3.0",
     "@react-native-community/blur": "^4.3.0",
+    "eas-cli": "^2.8.0",
     "expo": "~47.0.8",
     "expo-app-auth": "~11.1.0",
     "expo-google-app-auth": "~8.3.0",
