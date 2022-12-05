@@ -1,5 +1,4 @@
 import { Keyboard, Platform, StatusBar, Modal, StyleSheet, Text, TextInput, KeyboardAvoidingView, SafeAreaView, View, Button, TouchableOpacity, FlatList } from 'react-native'
-import { WebView } from 'react-native-webview'
 import Message from '../components/Message'
 import {db} from '../Firebase'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
@@ -81,7 +80,7 @@ export default function Global() {
 	}, [name])
 
 	const renderItem = ({ item }:any) => (
-		<Message  name={item.user} text={item.message} />
+		<Message  name={item.user} text={item.message} owned={item.uid == uid ? true : false} />
 	)
 
 	const Header = () => {
@@ -193,7 +192,7 @@ export default function Global() {
 				<FlatList
 					style={styles.list}
 					inverted
-					data={[...messages].reverse()}
+					data={messages?.reverse()}
 					renderItem={renderItem}
 					keyExtractor={item => item.timestamp.seconds}
 				/>

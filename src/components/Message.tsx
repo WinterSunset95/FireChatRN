@@ -1,11 +1,11 @@
 import { View, Text } from 'react-native';
 import { StyleSheet } from 'react-native';
 
-export default function Message( {text, name}:any ) {
+export default function Message( {text, name, owned }:any ) {
     return (
-        <Text style={{paddingBottom: 10}}>
+        <Text style={owned ? {paddingBottom: 10, alignSelf: 'flex-end'} : {paddingBottom: 10}}>
             <View style={styles.main}>
-                <Text style={styles.whiteText}>{name}</Text>
+                <Text style={owned ? {color: 'white'} : styles.whiteText}>{name}</Text>
                 <View style={styles.secondary}>
                     <Text style={styles.blackText}>{text}</Text>
                 </View>
