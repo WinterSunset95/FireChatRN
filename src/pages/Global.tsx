@@ -62,15 +62,6 @@ const styles = StyleSheet.create({
 		height: '100%',
 	},
 
-	list: {
-		flex: 1,
-		flexDirection: 'column',
-		width: '100%',
-		padding: 20,
-		paddingTop: 0,
-		paddingBottom: 20,
-	},
-
 	main: {
 		flex: 1,
 		flexDirection: 'column',

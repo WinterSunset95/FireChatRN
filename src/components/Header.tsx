@@ -9,7 +9,10 @@ const Header = (props :any) => {
 	const [name, setName, loginstate, setLoginstate, uid, setUid, login, logOut] = useContext(UserContext)
 	return (
 		<View style={[styles.nav]}>
-			<Text style={[styles.whiteText]}>FireChat</Text>
+			<Button
+				title='Users'
+				onPress={() => props.navigation.navigate('Users')}
+			/>
 			<Text style={[styles.whiteText]}>{props.title}</Text>
 			{loginstate ? 
 				<Button
@@ -18,7 +21,7 @@ const Header = (props :any) => {
 				/> :
 				<Button
 					title='Login'
-					onPress={login}
+					onPress={() => props.navigation.navigate('Login')}
 				/>
 			}
 		</View>

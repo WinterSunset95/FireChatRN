@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react'
 import {Alert, StyleSheet, Modal, Button, View, Text, TouchableOpacity, TextInput} from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
-import { getAuth, GoogleAuthProvider, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { getAuth, GoogleAuthProvider, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import UserContext from '../../Context'
 
 	const LogIn = (props:any) => {
@@ -116,11 +116,18 @@ const LoginForm = (props:any) => {
 		const auth = getAuth()
 		const mail = email.trim()
 		const pass = password.trim()
-		if (pass == confirm.trim()) {
+		if (pass == confirm.trim() && uname != "") {
 			createUserWithEmailAndPassword(auth, mail, pass)
 			.then((result) => {
 				if (result.user) {
-					setName(result.user.displayName ? result.user.displayName : result.user.email)
+					if (result.user.displayName) {
+						setName(result.user.displayName)
+					} else {
+						updateProfile(auth.currentUser!, {
+							displayName: uname
+						})
+						setName(uname)
+					}
 					setLoginstate(true)
 					setUid(result.user.uid!)
 					Alert.alert(

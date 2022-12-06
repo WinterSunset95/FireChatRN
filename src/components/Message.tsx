@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
 
     secondary: {
         flex: 0,
-        backgroundColor: 'white',
+        backgroundColor: '#bbb',
         borderRadius: 5,
         padding: 5,
     },
