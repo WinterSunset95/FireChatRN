@@ -10,8 +10,8 @@ const Header = (props :any) => {
 	return (
 		<View style={[styles.nav]}>
 			<Button
-				title='Users'
-				onPress={() => props.navigation.navigate('Users')}
+				title={props.to}
+				onPress={() => props.navigation.navigate(props.to)}
 			/>
 			<Text style={[styles.whiteText]}>{props.title}</Text>
 			{loginstate ? 

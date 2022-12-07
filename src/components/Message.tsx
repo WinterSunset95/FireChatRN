@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 
 export default function Message( {text, name, owned }:any ) {
     return (
-        <Text style={owned ? {paddingBottom: 10, alignSelf: 'flex-end'} : {paddingBottom: 10}}>
+        <Text style={owned ? {paddingBottom: 10, alignSelf: 'flex-end'} : {paddingBottom: 10, maxWidth: 300}}>
             <View style={styles.main}>
                 <Text style={owned ? {color: 'white'} : styles.whiteText}>{name}</Text>
                 <View style={styles.secondary}>
@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         borderRadius: 10,
         padding: 5,
+				maxWidth: 300
     },
 
     secondary: {

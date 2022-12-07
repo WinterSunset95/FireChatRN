@@ -55,9 +55,9 @@ export default function App() {
 				<StatusBar style="auto" />
 				<NavigationContainer >
 					<Stack.Navigator>
-						<Stack.Screen name="Login" component={LoginForm} options={{headerShown: false}}/>
-						<Stack.Screen name="Global" component={Global} options={{ headerTitle: () => <Header title="Global Chat" navigation={useNavigation()}/>, headerStyle: {backgroundColor: 'black'}, headerBackVisible: false}}/>
-						<Stack.Screen name="Users" component={Users} options={{ headerTitle: () => <Header title="User List" navigation={useNavigation()}/>, headerStyle: {backgroundColor: 'black'}, headerBackVisible: false}}/>
+						<Stack.Screen name="Global" component={Global} options={{ headerTitle: () => <Header title="Global Chat" to="Users" navigation={useNavigation()}/>, headerStyle: {backgroundColor: 'black'}, headerBackVisible: false}}/>
+						<Stack.Screen name="Login" component={() => <LoginForm navigation={useNavigation()} />} options={{headerShown: false}}/>
+						<Stack.Screen name="Users" component={Users} options={{ headerTitle: () => <Header title="User List" to="Global" navigation={useNavigation()}/>, headerStyle: {backgroundColor: 'black'}, headerBackVisible: false}}/>
 					</Stack.Navigator>
 				</NavigationContainer>
 		</UserContext.Provider>

@@ -14,10 +14,26 @@ export default function Global(props:any) {
 	const [name, setName, loginstate, setLoginstate, uid] = useContext(UserContext) 
 	const [currmessage, setCurrmessage] = useState('')
 
-	console.log(name, uid, loginstate)
-
 	const login = () => {
 		props.navigation.navigate('Login')
+	}
+
+
+	const chatgpt = async (text:string) => {
+		send(text)
+		const query = text.replace('@chatgpt', '')
+		const res = await fetch('https://firechatbackend.winter95.repl.co/api?message=' + query)
+		const result = await res.text()
+		query != "" && name != "" && uid != "" ? 
+		addDoc(collection(db, 'global'), {
+			user: 'ChatGPT',
+			uid: 'chatgpt@firechat',
+			message: result,
+			reacts: 0,
+			timestamp: new Date(),
+			replies: ''
+		}) : console.log(text)
+		setCurrmessage("")
 	}
 
 	const send = (text:string) => {
@@ -33,6 +49,14 @@ export default function Global(props:any) {
 		setCurrmessage("")
 	}
 
+	const handleSend = (text: string) => {
+		if (text.includes("@chatgpt")) {
+			chatgpt(text)
+		} else {
+			send(text)
+		}
+	}
+
 	const renderItem = ({ item }:any) => (
 		<Message  name={item.user} text={item.message} owned={item.uid == uid ? true : false} />
 	)
@@ -43,7 +67,7 @@ export default function Global(props:any) {
 			<View style={[styles.main]}>
 				<List styles={styles} messages={messages} renderItem={renderItem}/>
 			</View>
-			<InputArea styles={styles} currmessage={currmessage} send={send} login={login} loginstate={loginstate} setCurrmessage={setCurrmessage}/>
+			<InputArea styles={styles} currmessage={currmessage} send={handleSend} login={login} loginstate={loginstate} setCurrmessage={setCurrmessage}/>
 		</SafeAreaView>
 	)
 }
