@@ -17,6 +17,14 @@ export default function App() {
 	const [loginstate, setLoginstate] = useState(false)
 	const [uid, setUid] = useState('')
 
+	const ping = async () => {
+		const res = await fetch("https://firechatbackend.winter95.repl.co/")
+		console.log(await res.json())
+	}
+
+	useEffect(() => {
+		setInterval(ping, 3600000)
+	}, [])
 	const checkAuthState = () => {
 		const auth = getAuth()
 		onAuthStateChanged(auth, (user) => {

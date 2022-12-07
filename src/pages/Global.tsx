@@ -18,12 +18,16 @@ export default function Global(props:any) {
 		props.navigation.navigate('Login')
 	}
 
-
 	const chatgpt = async (text:string) => {
 		send(text)
 		const query = text.replace('@chatgpt', '')
 		const res = await fetch('https://firechatbackend.winter95.repl.co/api?message=' + query)
-		const result = await res.text()
+		let result
+		if (res.ok) {
+			result = await res.text()
+		} else {
+			result = "The server seems to be down. Please contact the administrator"
+		}
 		query != "" && name != "" && uid != "" ? 
 		addDoc(collection(db, 'global'), {
 			user: 'ChatGPT',
@@ -33,7 +37,6 @@ export default function Global(props:any) {
 			timestamp: new Date(),
 			replies: ''
 		}) : console.log(text)
-		setCurrmessage("")
 	}
 
 	const send = (text:string) => {
