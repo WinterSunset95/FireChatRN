@@ -1,12 +1,55 @@
-import { StyleSheet, View, Text, Button } from 'react-native'
+import { StyleSheet, View, Text, Button, TouchableOpacity, Image, Alert } from 'react-native'
+import { useState, useEffect, useContext } from 'react'
+import UserContext from '../../Context'
 
 const Users = (props:any) => {
+	const [name, setName, loginstate, setLoginstate, uid, setUid, login, logOut, users, privatechat, setPrivatechat] = useContext(UserContext)
 	return (
-		<View>
-			<Text>This is a placeholder for the users list</Text>
-			<Text>Still have no idea how to get users list :)</Text>
+		<View style={[styles.main]}>
+			{
+				users.map((user:any) => {
+					return (
+						<TouchableOpacity key={user.uid} style={[styles.user]} onPress={() => {
+							if (uid != user.uid) {
+								props.navigation.navigate('Private')
+								setPrivatechat(user.uid)
+							} else {
+								Alert.alert('YOU CANNOT CHAT WITH YOURSELF MF')
+							}
+							}}>
+							<Image style={[styles.pic]} source={{ uri: user.picture }} />
+							<Text>{user.name}</Text>
+						</TouchableOpacity>
+					)
+				})
+			}
 		</View>
 	)
 }
 
 export default Users
+
+const styles = StyleSheet.create({
+	main: {
+		flex: 1,
+		justifyContent: 'flex-start',
+		alignItems: 'flex-start',
+		padding: 15,
+	},
+
+	user: {
+		marginBottom: 10,
+		flex: 0,
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+
+	pic: {
+		width: 50,
+		height: 50,
+		borderRadius: 1000,
+		marginRight: 5,
+	},
+
+})

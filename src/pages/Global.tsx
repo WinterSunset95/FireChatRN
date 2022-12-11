@@ -61,7 +61,7 @@ export default function Global(props:any) {
 	}
 
 	const renderItem = ({ item }:any) => (
-		<Message  name={item.user} text={item.message} owned={item.uid == uid ? true : false} />
+		<Message  name={item.user} text={item.message} owned={item.uid == uid ? true : false} picture={item.picture ? item.picture : ''}/>
 	)
 
 	return (
@@ -70,7 +70,7 @@ export default function Global(props:any) {
 			<View style={[styles.main]}>
 				<List styles={styles} messages={messages} renderItem={renderItem}/>
 			</View>
-			<InputArea styles={styles} currmessage={currmessage} send={handleSend} login={login} loginstate={loginstate} setCurrmessage={setCurrmessage}/>
+			<InputArea currmessage={currmessage} send={handleSend} login={login} loginstate={loginstate} setCurrmessage={setCurrmessage}/>
 		</SafeAreaView>
 	)
 }
