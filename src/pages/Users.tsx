@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from 'react'
 import UserContext from '../../Context'
 
 const Users = (props:any) => {
-	const [name, setName, loginstate, setLoginstate, uid, setUid, login, logOut, users, privatechat, setPrivatechat] = useContext(UserContext)
+	const {uid, users, setPrivatechat} = useContext(UserContext)
 	return (
 		<View style={[styles.main]}>
 			{
@@ -17,7 +17,7 @@ const Users = (props:any) => {
 								Alert.alert('YOU CANNOT CHAT WITH YOURSELF MF')
 							}
 							}}>
-							<Image style={[styles.pic]} source={{ uri: user.picture }} />
+							<Image style={[styles.pic]} source={{ uri: user.picture != null ? user.picture : 'https://avatars.dicebear.com/api/bottts/' + user.name + '.png' }} />
 							<Text>{user.name}</Text>
 						</TouchableOpacity>
 					)
@@ -50,6 +50,8 @@ const styles = StyleSheet.create({
 		height: 50,
 		borderRadius: 1000,
 		marginRight: 5,
+		borderWidth: 1,
+		borderColor: 'black'
 	},
 
 })

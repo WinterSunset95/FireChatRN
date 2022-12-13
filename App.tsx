@@ -81,7 +81,7 @@ export default function App() {
 	}, [name])
 
   return (
-		<UserContext.Provider value={[name, setName, loginstate, setLoginstate, uid, setUid, login, logOut, users, privatechat, setPrivatechat]}>
+		<UserContext.Provider value={{name, setName, loginstate, setLoginstate, uid, setUid, login, logOut, users, privatechat, setPrivatechat}}>
 				<StatusBar style="auto" />
 				<NavigationContainer >
 					<Stack.Navigator>

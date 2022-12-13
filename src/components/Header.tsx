@@ -6,7 +6,7 @@ import UserContext from '../../Context'
 import { View, Button, Text, StyleSheet } from 'react-native'
 
 const Header = (props :any) => {
-	const [name, setName, loginstate, setLoginstate, uid, setUid, login, logOut] = useContext(UserContext)
+	const {loginstate, logOut} = useContext(UserContext)
 	return (
 		<View style={[styles.nav]}>
 			<Button

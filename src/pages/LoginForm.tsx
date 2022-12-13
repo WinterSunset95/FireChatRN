@@ -6,7 +6,6 @@ import { getAuth, GoogleAuthProvider, onAuthStateChanged, signOut, createUserWit
 import UserContext from '../../Context'
 
 	const LogIn = (props:any) => {
-		const [name, setName, loginstate, setLoginstate, uid, setUid, login, logOut] = useContext(UserContext)
 		return (
 			<>
 				<TextInput

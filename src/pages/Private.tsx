@@ -8,8 +8,8 @@ import Message from '../components/Message'
 import InputArea from '../components/Input'
 import List from '../components/List'
 
-const Private = (props:any) => {
-	const [name, setName, loginstate, setLoginstate, uid, setUid, login, logOut, users, privatechat, setPrivatechat] = useContext(UserContext)
+const Private = () => {
+	const {name, loginstate, uid, login, privatechat} = useContext(UserContext)
 	let userArr = [uid, privatechat]
 	userArr = userArr.sort()
 	const docName = userArr[0] + userArr[1]

@@ -11,7 +11,7 @@ import UserContext from '../../Context'
 export default function Global(props:any) {
 	const messagesRef = query(collection(db, 'global'), orderBy('timestamp'))
 	const [messages] = useCollectionData(messagesRef)
-	const [name, setName, loginstate, setLoginstate, uid] = useContext(UserContext) 
+	const {name, loginstate, uid} = useContext(UserContext) 
 	const [currmessage, setCurrmessage] = useState('')
 
 	const login = () => {
