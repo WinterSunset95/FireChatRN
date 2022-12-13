@@ -2,12 +2,12 @@
   "expo": {
     "name": "FireChatRN",
     "slug": "FireChatRN",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/fire_chat_1024.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/fire_chat_splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
