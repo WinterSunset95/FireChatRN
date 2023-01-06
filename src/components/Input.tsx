@@ -1,12 +1,18 @@
 import { StyleSheet, KeyboardAvoidingView, TouchableOpacity, TextInput, Button } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
+import { faPaperPlane, faVideo } from '@fortawesome/free-solid-svg-icons'
+import { useContext } from 'react'
+import UserContext from '../../Context'
 
 const InputArea = (props:any) => {
+	const {videostat, setVideostat} = useContext(UserContext)
 	if (props.loginstate) {
 		return (
 			<KeyboardAvoidingView style={[styles.foot]}
 			>
+				<TouchableOpacity style={styles.send} onPress={() => setVideostat(!videostat)}>
+					<FontAwesomeIcon icon={faVideo} size={30} color='white' />
+				</TouchableOpacity>
 				<TextInput
 					placeholder='Message'
 					style={[styles.input]}	

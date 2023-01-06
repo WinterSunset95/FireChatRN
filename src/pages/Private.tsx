@@ -6,10 +6,11 @@ import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { addDoc, query, collection, orderBy, getDocs, doc, getDoc, setDoc } from 'firebase/firestore'
 import Message from '../components/Message'
 import InputArea from '../components/Input'
+import { VideoPlayer, LinkPlayer } from './Video'
 import List from '../components/List'
 
 const Private = () => {
-	const {name, loginstate, uid, login, privatechat} = useContext(UserContext)
+	const {name, loginstate, uid, login, privatechat, videostat, notif, setNotif} = useContext(UserContext)
 	let userArr = [uid, privatechat]
 	userArr = userArr.sort()
 	const docName = userArr[0] + userArr[1]
@@ -37,9 +38,32 @@ const Private = () => {
 		}
 	}
 
-	const send = (text:string) => {
+	const setvideo = () => {
+		send(name + ' linked a video: ', 'notification', 'set', null)
+	}
+
+	const pausevideo = (time:any) => {
+		console.log("Video paused at: " + time)
+		send(name + ' paused the video at ' + time, 'notification', 'pause', time)
+	}
+
+	const playvideo = (time:any) => {
+		console.log("Video playing at: " + time)
+		send(name + ' played the video at ' + time, 'notification', 'play', time)
+	}
+
+	const seekvideo = () => {
+		console.log("seekvideo")
+	}
+
+	const send = (text:string, type:any, action:any, seek:any) => {
 		text != "" && name != "" && uid != "" ? 
 		addDoc(collection(db, docName), {
+			type: type,
+			effects: {
+				action: action,
+				seek: seek,
+			},
 			user: name,
 			uid: uid,
 			message: text,
@@ -51,22 +75,36 @@ const Private = () => {
 	}
 
 	const handleSend = (text:any) => {
-		send(text)
+		send(text, 'message', null, null)
 	}
 
 	const renderItem = ({ item }:any) => (
-		<Message  name={item.user} text={item.message} owned={item.uid == uid ? true : false} picture={item.picture ? item.picture : ''}/>
+		<Message name={item.user} text={item.message} owned={item.uid == uid ? true : false} picture={item.picture ? item.picture : ''}/>
 	)
+
+	useEffect(() => {
+		let type = typeof messages
+		if (type == 'object' && messages != undefined && messages.length > 0) {
+			if (uid == messages[0].uid) {
+				setNotif({
+					action: messages[0].effects.action,
+					seek: messages[0].effects.seek,
+				})
+			}
+		}
+	}, [messages])
+
 	useEffect(() => {
 		getChat()
 	}, [chat])
 
 	return (
 	 <View style={{ flex: 1, height: '100%', width: '100%' }}>
-			<View style={styles.main}>
-				<List styles={styles} messages={messages} renderItem={renderItem}/>
-			</View>
-			<InputArea currmessage={currmessage} send={handleSend} login={login} loginstate={loginstate} setCurrmessage={setCurrmessage}/>
+		{videostat ? <VideoPlayer setvideo={setvideo} playvideo={playvideo} pausevideo={pausevideo} seekvideo={seekvideo} /> : null}
+		<View style={styles.main}>
+			<List styles={styles} messages={messages} renderItem={renderItem}/>
+		</View>
+		<InputArea currmessage={currmessage} send={handleSend} login={login} loginstate={loginstate} setCurrmessage={setCurrmessage}/>
 	</View>
 	)
 }

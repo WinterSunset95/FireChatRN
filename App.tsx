@@ -21,6 +21,8 @@ export default function App() {
 	const [loginstate, setLoginstate] = useState(false)
 	const [uid, setUid] = useState('')
 	const [privatechat, setPrivatechat] = useState('0')
+	const [videostat, setVideostat] = useState(false)
+	const [notif, setNotif] = useState({})
 
 	const usersref = query(collection(db, 'users'))
 	const [users] = useCollectionData(usersref)
@@ -81,7 +83,7 @@ export default function App() {
 	}, [name])
 
   return (
-		<UserContext.Provider value={{name, setName, loginstate, setLoginstate, uid, setUid, login, logOut, users, privatechat, setPrivatechat}}>
+		<UserContext.Provider value={{name, setName, loginstate, setLoginstate, uid, setUid, login, logOut, users, privatechat, setPrivatechat, videostat, setVideostat, notif, setNotif}}>
 				<StatusBar style="auto" />
 				<NavigationContainer >
 					<Stack.Navigator>

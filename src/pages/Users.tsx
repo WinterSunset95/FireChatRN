@@ -7,7 +7,7 @@ const Users = (props:any) => {
 	return (
 		<View style={[styles.main]}>
 			{
-				users.map((user:any) => {
+				users ? users.map((user:any) => {
 					return (
 						<TouchableOpacity key={user.uid} style={[styles.user]} onPress={() => {
 							if (uid != user.uid) {
@@ -21,7 +21,7 @@ const Users = (props:any) => {
 							<Text>{user.name}</Text>
 						</TouchableOpacity>
 					)
-				})
+				}) : null
 			}
 		</View>
 	)

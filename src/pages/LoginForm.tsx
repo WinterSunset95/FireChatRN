@@ -5,83 +5,82 @@ import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 import { getAuth, GoogleAuthProvider, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import UserContext from '../../Context'
 
-	const LogIn = (props:any) => {
-		return (
-			<>
-				<TextInput
-					placeholder='Username'
-					style={[styles.modalInput, {marginBottom: 20}]}
-					onChangeText={(event) => {
-						props.setEmail(event)
-					}}
-					defaultValue={props.email}
-				/>
-				<TextInput
-					placeholder='Password'
-					style={[styles.modalInput, {marginBottom: 20}]}
-					onChangeText={(text) => {
-						props.setPassword(text)
-					}}
-					defaultValue={props.password}
-				/>
-				<TouchableOpacity
-					style={[styles.modalButton]}
-					onPress={() => props.signIn()}
-				>
-					<Text>Login</Text>
-				</TouchableOpacity>
-			</>
-		)
-	}
+const LogIn = (props:any) => {
+	return (
+		<>
+			<TextInput
+				placeholder='Username'
+				style={[styles.modalInput, {marginBottom: 20}]}
+				onChangeText={(event) => {
+					props.setEmail(event)
+				}}
+				defaultValue={props.email}
+			/>
+			<TextInput
+				placeholder='Password'
+				style={[styles.modalInput, {marginBottom: 20}]}
+				onChangeText={(text) => {
+					props.setPassword(text)
+				}}
+				defaultValue={props.password}
+			/>
+			<TouchableOpacity
+				style={[styles.modalButton]}
+				onPress={() => props.signIn()}
+			>
+				<Text>Login</Text>
+			</TouchableOpacity>
+		</>
+	)
+}
 
-	const CreateNew = (props:any) => {
-		return (
-			<>
-				<TextInput
-					placeholder='Username'
-					style={[styles.modalInput, {marginBottom: 20}]}
-					onChangeText={(event) => {
-						props.setUname(event)
-					}}
-					defaultValue={props.uname}
-				/>
-				<TextInput
-					placeholder='Email'
-					style={[styles.modalInput, {marginBottom: 20}]}
-					onChangeText={(event) => {
-						props.setEmail(event)
-					}}
-					defaultValue={props.email}
-				/>
-				<TextInput
-					placeholder='Password'
-					style={[styles.modalInput, {marginBottom: 20}]}
-					onChangeText={(text) => {
-						props.setPassword(text)
-					}}
-					defaultValue={props.password}
-				/>
-				<TextInput
-					placeholder='Confirm'
-					style={[styles.modalInput, {marginBottom: 20}]}
-					onChangeText={(text) => {
-						props.setConfirm(text)
-					}}
-					defaultValue={props.confirm}
-				/>
-				<TouchableOpacity
-					style={[styles.modalButton]}
-					onPress={() => props.userCreate()}
-				>
-					<Text>Sign Up</Text>
-				</TouchableOpacity>
-			</>
-		)
-	}
-
+const CreateNew = (props:any) => {
+	return (
+		<>
+			<TextInput
+				placeholder='Username'
+				style={[styles.modalInput, {marginBottom: 20}]}
+				onChangeText={(event) => {
+					props.setUname(event)
+				}}
+				defaultValue={props.uname}
+			/>
+			<TextInput
+				placeholder='Email'
+				style={[styles.modalInput, {marginBottom: 20}]}
+				onChangeText={(event) => {
+					props.setEmail(event)
+				}}
+				defaultValue={props.email}
+			/>
+			<TextInput
+				placeholder='Password'
+				style={[styles.modalInput, {marginBottom: 20}]}
+				onChangeText={(text) => {
+					props.setPassword(text)
+				}}
+				defaultValue={props.password}
+			/>
+			<TextInput
+				placeholder='Confirm'
+				style={[styles.modalInput, {marginBottom: 20}]}
+				onChangeText={(text) => {
+					props.setConfirm(text)
+				}}
+				defaultValue={props.confirm}
+			/>
+			<TouchableOpacity
+				style={[styles.modalButton]}
+				onPress={() => props.userCreate()}
+			>
+				<Text>Sign Up</Text>
+			</TouchableOpacity>
+		</>
+	)
+}
 
 const LoginForm = (props:any) => {
-	const [name, setName, loginstate, setLoginstate, uid, setUid, login, logOut] = useContext(UserContext)
+	const {name, setName, loginstate, setLoginstate, uid, setUid, login, logOut} = useContext(UserContext)
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 	const [confirm, setConfirm] = useState("")
