@@ -6,7 +6,7 @@ import { addDoc, query, collection, orderBy, getDocs } from 'firebase/firestore'
 import {useState, useEffect, useContext} from 'react'
 import InputArea from '../components/Input'
 import List from '../components/List'
-import UserContext from '../../Context'
+import { UserContext } from '../../Context'
 
 export default function Global(props:any) {
 	const messagesRef = query(collection(db, 'global'), orderBy('timestamp'))

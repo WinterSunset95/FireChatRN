@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import Global from './src/pages/Global'
-import UserContext from './Context'
+import { UserContext } from './Context'
 import Header from './src/components/Header';
 import Users from './src/pages/Users';
 import LoginForm from './src/pages/LoginForm';

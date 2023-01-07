@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text, Button, TouchableOpacity, Image, Alert } from 'react-native'
 import { useState, useEffect, useContext } from 'react'
-import UserContext from '../../Context'
+import { UserContext } from '../../Context'
 
 const Users = (props:any) => {
 	const {uid, users, setPrivatechat} = useContext(UserContext)

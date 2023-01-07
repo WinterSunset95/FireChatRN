@@ -3,7 +3,7 @@ import {Alert, StyleSheet, Modal, Button, View, Text, TouchableOpacity, TextInpu
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 import { getAuth, GoogleAuthProvider, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
-import UserContext from '../../Context'
+import { UserContext } from '../../Context'
 
 const LogIn = (props:any) => {
 	return (

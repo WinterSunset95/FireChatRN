@@ -1,6 +1,12 @@
+
+
+
+
+
 import {createContext} from 'react'
 
 
 const UserContext = createContext()
+const PrivateChatContext = createContext()
 
-export default UserContext
+export {UserContext, PrivateChatContext}

@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text } from 'react-native'
 import { useState, useEffect, useContext } from 'react'
-import UserContext from '../../Context'
+import { UserContext, PrivateChatContext } from '../../Context'
 import { db } from '../Firebase'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { addDoc, query, collection, orderBy, getDocs, doc, getDoc, setDoc } from 'firebase/firestore'
@@ -10,7 +10,7 @@ import { VideoPlayer, LinkPlayer } from './Video'
 import List from '../components/List'
 
 const Private = () => {
-	const {name, loginstate, uid, login, privatechat, videostat, notif, setNotif} = useContext(UserContext)
+	const {name, loginstate, uid, login, privatechat, videostat, setVideostat, notif, setNotif} = useContext(UserContext)
 	let userArr = [uid, privatechat]
 	userArr = userArr.sort()
 	const docName = userArr[0] + userArr[1]
@@ -39,31 +39,37 @@ const Private = () => {
 	}
 
 	const setvideo = (text:any) => {
-		send(name + ' linked a video: ' + text, 'notification', 'set', null)
+		vidUpdate(text, 'set', null)
 	}
 
-	const pausevideo = (time:any) => {
+	const pausevideo = (text:any, time:any) => {
 		console.log("Video paused at: " + time)
-		send(name + ' paused the video at ' + time, 'notification', 'pause', time)
+		vidUpdate(text, 'pause', time)
 	}
 
-	const playvideo = (time:any) => {
+	const playvideo = (text:any, time:any) => {
 		console.log("Video playing at: " + time)
-		send(name + ' played the video at ' + time, 'notification', 'play', time)
+		vidUpdate(text, 'play', time)
 	}
 
 	const seekvideo = () => {
 		console.log("seekvideo")
 	}
 
-	const send = (text:string, type:any, action:any, seek:any) => {
+	const vidUpdate = (text:any, action:any, seek:any) => {
+		addDoc(collection(db, "video" + docName), {
+			user: name,
+			uid: uid,
+			action: action,
+			seek: seek,
+			uri: text,
+			timestamp: new Date(),
+		})
+	}
+
+	const send = (text:string) => {
 		text != "" && name != "" && uid != "" ? 
 		addDoc(collection(db, docName), {
-			type: type,
-			effects: {
-				action: action,
-				seek: seek,
-			},
 			user: name,
 			uid: uid,
 			message: text,
@@ -75,7 +81,7 @@ const Private = () => {
 	}
 
 	const handleSend = (text:any) => {
-		send(text, 'message', null, null)
+		send(text)
 	}
 
 	const renderItem = ({ item }:any) => (
@@ -83,25 +89,12 @@ const Private = () => {
 	)
 
 	useEffect(() => {
-		let type = typeof messages
-		if (type == 'object' && messages != undefined && messages.length > 0) {
-			if (uid == messages[0].uid) {
-				setNotif({
-					uri: messages[0].message.split('video:')[1],
-					action: messages[0].effects.action,
-					seek: messages[0].effects.seek,
-				})
-			}
-		}
-	}, [messages])
-
-	useEffect(() => {
 		getChat()
 	}, [chat])
 
 	return (
 	 <View style={{ flex: 1, height: '100%', width: '100%' }}>
-		{videostat ? <VideoPlayer setvideo={setvideo} playvideo={playvideo} pausevideo={pausevideo} seekvideo={seekvideo} /> : null}
+		{videostat ? <VideoPlayer setvideo={setvideo} playvideo={playvideo} pausevideo={pausevideo} seekvideo={seekvideo} setVideostat={setVideostat}/> : null}
 		<View style={styles.main}>
 			<List styles={styles} messages={messages} renderItem={renderItem}/>
 		</View>

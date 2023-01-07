@@ -2,7 +2,7 @@ import { StyleSheet, KeyboardAvoidingView, TouchableOpacity, TextInput, Button }
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faPaperPlane, faVideo } from '@fortawesome/free-solid-svg-icons'
 import { useContext } from 'react'
-import UserContext from '../../Context'
+import {UserContext} from '../../Context'
 
 const InputArea = (props:any) => {
 	const {videostat, setVideostat} = useContext(UserContext)
