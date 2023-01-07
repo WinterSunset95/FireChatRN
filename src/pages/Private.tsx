@@ -38,8 +38,8 @@ const Private = () => {
 		}
 	}
 
-	const setvideo = () => {
-		send(name + ' linked a video: ', 'notification', 'set', null)
+	const setvideo = (text:any) => {
+		send(name + ' linked a video: ' + text, 'notification', 'set', null)
 	}
 
 	const pausevideo = (time:any) => {
@@ -87,6 +87,7 @@ const Private = () => {
 		if (type == 'object' && messages != undefined && messages.length > 0) {
 			if (uid == messages[0].uid) {
 				setNotif({
+					uri: messages[0].message.split('video:')[1],
 					action: messages[0].effects.action,
 					seek: messages[0].effects.seek,
 				})
