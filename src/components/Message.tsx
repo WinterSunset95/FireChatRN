@@ -1,16 +1,16 @@
 import { View, Text } from 'react-native';
 import { StyleSheet } from 'react-native';
 
-export default function Message( {text, name, owned, timestamp, picture }:any ) {
+export default function Message(props:any) {
     return (
-        <Text style={owned ? {paddingBottom: 10, alignSelf: 'flex-end'} : {paddingBottom: 10, maxWidth: 300}}>
+        <Text style={props.owned ? {paddingBottom: 10, alignSelf: 'flex-end'} : {paddingBottom: 10, maxWidth: 300}}>
             <View style={styles.main}>
-                <Text style={owned ? {color: 'white'} : styles.whiteText}>{name}</Text>
+                <Text style={props.owned ? {color: 'white'} : styles.whiteText}>{props.name}</Text>
                 <View style={styles.secondary}>
-                    <Text style={styles.blackText}>{text}</Text>
+                    <Text style={styles.blackText}>{props.text}</Text>
+					<Text>{props.timestamp.seconds}</Text>
                 </View>
             </View>
-			<Text>{timestamp}</Text>
         </Text>
     )
 }

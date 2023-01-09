@@ -7,7 +7,7 @@ const List = (props:any) => {
 			inverted={true}
 			data={props.messages?.sort((a:any, b:any) => b.timestamp.seconds - a.timestamp.seconds)}
 			renderItem={props.renderItem}
-			keyExtractor={item => item.timestamp.seconds + item.message + item.user}
+			keyExtractor={item => item.timestamp.seconds ? item.timestamp.seconds : item.timestamp}
 		/>
 	)
 }

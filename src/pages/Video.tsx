@@ -6,6 +6,7 @@ import { useState, useEffect, useRef, useContext, useCallback } from 'react'
 import { db } from '../Firebase'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { query, collection, orderBy } from 'firebase/firestore'
+import { getDatabase, ref, onValue, onChildAdded, set, push, child, get, update, remove } from "firebase/database";
 import { UserContext, PrivateChatContext } from '../../Context'
 import {Alert, StyleSheet, Modal, Button, View, Text, TouchableOpacity, TextInput} from 'react-native'
 import { Video, AVPlaybackStatus } from 'expo-av'
@@ -18,8 +19,7 @@ const LinkPlayer = (props:any) => {
 	let userArr = [uid, privatechat]
 	userArr = userArr.sort()
 	const docName = "video" + userArr[0] + userArr[1]
-	const vidRef = query(collection(db, docName), orderBy('timestamp'))
-	const vid = useCollectionData(vidRef)[0]
+	const [vid, setVid] = useState<any>([])
 	const video = useRef(null)
 	const [status, setStatus] = useState({})
 	const [playing, setPlaying] = useState(false)
@@ -35,11 +35,6 @@ const LinkPlayer = (props:any) => {
 			props.pausevideo(props.uri, position)
 		}
 	}, [playing])
-	useEffect(() => {
-		if (vid && vid.length > 1) {
-			const data = vid[vid.length - 1]
-		}
-	}, [vid])
 	return (
 		<View style={[styles.player]}>
 			<Video
@@ -58,12 +53,12 @@ const LinkPlayer = (props:any) => {
 }
 
 const YtPlayer = (props:any) => {
+	const vid = props.vid
+	const database = getDatabase();
 	const {uid, privatechat} = useContext(UserContext)
 	let userArr = [uid, privatechat]
 	userArr = userArr.sort()
 	const docName = "video" + userArr[0] + userArr[1]
-	const vidRef = query(collection(db, docName), orderBy('timestamp'))
-	const vid = useCollectionData(vidRef)[0]
 	const video = useRef(null)
 	const [position, setPosition] = useState(0)
 	let link = props.uri
@@ -113,24 +108,21 @@ const Player = (props:any) => {
 	const {uid, privatechat} = useContext(UserContext)
 	let userArr = [uid, privatechat]
 	userArr = userArr.sort()
-	const docName = "video" + userArr[0] + userArr[1]
-	const vidRef = query(collection(db, docName), orderBy('timestamp'))
-	const vid = useCollectionData(vidRef)[0]
 	const [data, setData] = useState(null)
 	useEffect(() => {
-		if (vid && vid.length > 0) {
-			setData(vid[vid.length - 1])
+		if (props.vid && props.vid.length > 0) {
+			setData(props.vid[props.vid.length - 1])
 		}
-	}, [vid])
+	}, [props.vid])
 	const BackBtn = (props:any) => {
 		return (
 			<View style={[styles.back]}>
 				<View>
 					<Text style={[styles.notif]}>
 					{data ?
-					data.action == 'set'  ? 'Video set by ' + data.name
+					data.action == 'set'  ? 'Video set by ' + data.user
 					: data.action == 'play' ? 'Video playing'
-					: data.action == 'pause' ? 'Video paused at ' + data.seek + " by " + data.name
+					: data.action == 'pause' ? 'Video paused at ' + data.seek + " by " + data.user
 					: null
 					: null}
 					</Text>
@@ -147,7 +139,7 @@ const Player = (props:any) => {
 		<>
 			<BackBtn setView={props.setView} />
 			{
-				props.uri.includes('youtube.com') || props.uri.includes('youtu.be') ? <YtPlayer uri={props.uri} playvideo={props.playvideo} pausevideo={props.pausevideo} seekvideo={props.seekvideo} setView={props.setView} /> : <LinkPlayer uri={props.uri} playvideo={props.playvideo} pausevideo={props.pausevideo} seekvideo={props.seekvideo} setView={props.setView} />
+				props.uri.includes('youtube.com') || props.uri.includes('youtu.be') ? <YtPlayer uri={props.uri} playvideo={props.playvideo} pausevideo={props.pausevideo} seekvideo={props.seekvideo} setView={props.setView} vid={props.vid} /> : <LinkPlayer uri={props.uri} playvideo={props.playvideo} pausevideo={props.pausevideo} seekvideo={props.seekvideo} setView={props.setView} />
 			}
 		</>
 	)
@@ -175,14 +167,31 @@ const Selector = (props:any) => {
 }
 
 const VideoPlayer = (props:any) => {
+	const database = getDatabase()
 	const {uid, privatechat} = useContext(UserContext)
 	let userArr = [uid, privatechat]
 	userArr = userArr.sort()
 	const docName = "video" + userArr[0] + userArr[1]
-	const vidRef = query(collection(db, docName), orderBy('timestamp'))
-	const vid = useCollectionData(vidRef)[0]
+	const [vid, setVid] = useState<any>([])
 	const [view, setView] = useState('selector')
 	const [uri, setUri] = useState("https://rr3---sn-gwpa-nia6.googlevideo.com/videoplayback?expire=1673032962&ei=oiC4Y5WsCcWmgQebwobYCA&ip=2a01%3A4f8%3A1c1e%3A5d0c%3A%3A1&id=o-AMRqeJa6yXgcwb_1nuHFCt3JgnCD9KoUbBvGNIVcDRCe&itag=397&source=youtube&requiressl=yes&vprv=1&mime=video%2Fmp4&gir=yes&clen=10104876&dur=128.962&lmt=1639878521826165&keepalive=yes&fexp=24007246&c=ANDROID&txp=5532434&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Cmime%2Cgir%2Cclen%2Cdur%2Clmt&sig=AOq0QJ8wRgIhAOKR66MuQnCPCGkzlM9rST1PEuPPj27tTJFjUmAfp7yqAiEAzLJp8HXoCSaYg6R6qX9FkxgFLz0argVWXyFDTYTtgPo%3D&redirect_counter=1&rm=sn-4g5erd7e&req_id=d9167751bb0aa3ee&cms_redirect=yes&ipbypass=yes&mh=GJ&mip=2409:4066:e1b:36c6:f470:9a79:cb54:e64f&mm=31&mn=sn-gwpa-nia6&ms=au&mt=1673011080&mv=m&mvi=3&pcm2cms=yes&pl=41&lsparams=ipbypass,mh,mip,mm,mn,ms,mv,mvi,pcm2cms,pl&lsig=AG3C_xAwRQIgbSIML_Yr75GjWgL-mbQFGIGfG51zo8ie8E5jQ4rpcAYCIQCWBjXyyFiqI5hiDcoAHQlgW5RxV1YATHiLNF9KgJRf6w%3D%3D")
+	const vidRef = ref(database, 'videos/' + docName)
+	useEffect(() => {
+		const unsubscribe = onValue(vidRef, (snapshot) => {
+			const arr = []
+			const data = snapshot.val()
+			const keys = Object.keys(data)
+			for (let i = 0; i < keys.length; i++) {
+				const k = keys[i]
+				let toPush = data[k]
+				toPush.timestamp = i
+				toPush.currtime = k
+				arr.push(toPush)
+			}
+			setVid(arr)
+		})
+		return unsubscribe
+	}, [])
 	useEffect(() => {
 		console.log('update')
 		if (vid && vid.length > 0) {
@@ -197,7 +206,7 @@ const VideoPlayer = (props:any) => {
 	}, [vid])
 	return (
 		<View style={[styles.main]}>
-			{view == 'selector' ? <Selector setView={setView} setUri={setUri} setvideo={props.setvideo} /> : <Player setView={setView} uri={uri} playvideo={props.playvideo} pausevideo={props.pausevideo} seekvideo={props.seekvideo} /> }
+			{view == 'selector' ? <Selector setView={setView} setUri={setUri} setvideo={props.setvideo} /> : <Player setView={setView} uri={uri} playvideo={props.playvideo} pausevideo={props.pausevideo} seekvideo={props.seekvideo} vid={vid} /> }
 		</View>
 	)
 }
