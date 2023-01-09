@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native';
 import { StyleSheet } from 'react-native';
 
-export default function Message( {text, name, owned }:any ) {
+export default function Message( {text, name, owned, timestamp, picture }:any ) {
     return (
         <Text style={owned ? {paddingBottom: 10, alignSelf: 'flex-end'} : {paddingBottom: 10, maxWidth: 300}}>
             <View style={styles.main}>
@@ -10,6 +10,7 @@ export default function Message( {text, name, owned }:any ) {
                     <Text style={styles.blackText}>{text}</Text>
                 </View>
             </View>
+			<Text>{timestamp}</Text>
         </Text>
     )
 }

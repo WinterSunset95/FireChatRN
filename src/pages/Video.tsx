@@ -128,9 +128,9 @@ const Player = (props:any) => {
 				<View>
 					<Text style={[styles.notif]}>
 					{data ?
-					data.action == 'set'  ? 'Video set' 
+					data.action == 'set'  ? 'Video set by ' + data.name
 					: data.action == 'play' ? 'Video playing'
-					: data.action == 'pause' ? 'Video paused at ' + data.seek
+					: data.action == 'pause' ? 'Video paused at ' + data.seek + " by " + data.name
 					: null
 					: null}
 					</Text>
