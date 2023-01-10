@@ -12,12 +12,15 @@
 				{
 					"icon": "./assets/icon.png",
 					"color": "#FFFFFF",
+					"sounds": [
+						"./assets/beep_beep.mp3"
+					],
 					"androidMode": "default",
 					"androidCollapsedTitle": "New notifications",
 					"androidCollapsedBody": "Tap to view",
 					"androidGrouping": "grouped",
 					"androidGroupingBehavior": "all",
-					"androidDisplayInForeground": true,
+					"androidDisplayInForeground": true
 				}
 			]
 		],
@@ -42,7 +45,7 @@
 			"supportsTablet": true
 		},
 		"android": {
-			"versionCode": 2,
+			"versionCode": 3,
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/adaptive-icon.png",
 				"backgroundColor": "#FFFFFF"

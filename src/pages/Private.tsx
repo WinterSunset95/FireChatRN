@@ -9,6 +9,15 @@ import Message from '../components/Message'
 import InputArea from '../components/Input'
 import { VideoPlayer, LinkPlayer } from './Video'
 import List from '../components/List'
+import * as Notifications from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+	handleNotification: async () => ({
+		shouldShowAlert: true,
+		shouldPlaySound: true,
+		shouldSetBadge: true,
+	}),
+})
 
 const Private = () => {
 	const database = getDatabase();
@@ -112,6 +121,24 @@ const Private = () => {
 	useEffect(() => {
 		getChat()
 	}, [chat])
+
+	async function notify(user:any, text:any, group:any) {
+		await Notifications.scheduleNotificationAsync({
+			content: {
+				title: user + ':  ' + group,
+				body: text,
+				data: { data: 'goes here' },
+			},
+			trigger: null
+		})
+	}
+
+	useEffect(() => {
+		const message = messages[0]
+		if (message && message.uid != uid) {
+			notify(message.user, message.message, 'Private Chat')
+		}
+	}, [messages])
 
 	return (
 	 <View style={{ flex: 1, height: '100%', width: '100%' }}>

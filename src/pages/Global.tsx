@@ -3,11 +3,20 @@ import Message from '../components/Message'
 import {db} from '../Firebase'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { addDoc, query, collection, orderBy, getDocs } from 'firebase/firestore'
-import {useState, useEffect, useContext} from 'react'
+import {useState, useEffect, useContext, useRef} from 'react'
 import InputArea from '../components/Input'
 import List from '../components/List'
 import { UserContext } from '../../Context'
 import { getDatabase, ref, onValue, onChildAdded, set, push, child, get, update, remove } from "firebase/database";
+import * as Notifications from 'expo-notifications'
+
+Notifications.setNotificationHandler({
+	handleNotification: async () => ({
+		shouldShowAlert: true,
+		shouldPlaySound: true,
+		shouldSetBadge: true,
+	}),
+})
 
 export default function Global(props:any) {
 	const database = getDatabase()
@@ -53,7 +62,7 @@ export default function Global(props:any) {
 		setCurrmessage("")
 	}
 
-	const handleSend = (text: string) => {
+	const handleSend = async (text: string) => {
 		if (text.includes("@chatgpt")) {
 			chatgpt(text)
 		} else {
@@ -82,6 +91,24 @@ export default function Global(props:any) {
 		})
 		return unsubscribe
 	}, [])
+
+	async function notify(user:any, text:any, group:any) {
+		await Notifications.scheduleNotificationAsync({
+			content: {
+				title: user + ':  ' + group,
+				body: text,
+				data: { data: 'goes here' },
+			},
+			trigger: null
+		})
+	}
+
+	useEffect(() => {
+		const message = messages[0]
+		if (message && message.uid != uid) {
+			notify(message.user, message.message, 'Global')
+		}
+	}, [messages])
 
 	return (
 		<SafeAreaView style={styles.body}>
