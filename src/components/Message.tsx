@@ -9,8 +9,8 @@ export default function Message(props:any) {
                 <Text style={props.owned ? {color: 'white'} : styles.whiteText}>{props.name}</Text>
                 <View style={styles.secondary}>
                     <Text style={styles.blackText}>{props.text}</Text>
-					<Text>{props.timestamp.seconds}</Text>
                 </View>
+				<Text>{time}</Text>
             </View>
         </Text>
     )
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         borderRadius: 10,
         padding: 5,
-				maxWidth: 300
+		maxWidth: 300
     },
 
     secondary: {

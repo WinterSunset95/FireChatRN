@@ -1,40 +1,61 @@
+
+
+
+
+
+
 {
-  "expo": {
-    "name": "FireChatRN",
-    "slug": "FireChatRN",
-    "version": "1.0.1",
-    "orientation": "portrait",
-    "icon": "./assets/fire_chat_1024.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/fire_chat_splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
+	"expo": {
+		"plugins": [
+			[
+				"expo-notifications",
+				{
+					"icon": "./assets/icon.png",
+					"color": "#FFFFFF",
+					"androidMode": "default",
+					"androidCollapsedTitle": "New notifications",
+					"androidCollapsedBody": "Tap to view",
+					"androidGrouping": "grouped",
+					"androidGroupingBehavior": "all",
+					"androidDisplayInForeground": true,
+				}
+			]
+		],
+		"name": "FireChatRN",
+		"slug": "FireChatRN",
+		"version": "1.0.1",
+		"orientation": "portrait",
+		"icon": "./assets/fire_chat_1024.png",
+		"userInterfaceStyle": "light",
+		"splash": {
+			"image": "./assets/fire_chat_splash.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
+		},
+		"updates": {
+			"fallbackToCacheTimeout": 0
+		},
+		"assetBundlePatterns": [
+			"**/*"
+		],
+		"ios": {
+			"supportsTablet": true
+		},
+		"android": {
 			"versionCode": 2,
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      },
-      "package": "com.wintersunset95.FireChatRN"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "b9e125fd-8edc-4a5c-8366-eb53aaf36c65"
-      }
-    }
-  }
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/adaptive-icon.png",
+				"backgroundColor": "#FFFFFF"
+			},
+			"package": "com.wintersunset95.FireChatRN"
+		},
+		"web": {
+			"favicon": "./assets/favicon.png"
+		},
+		"extra": {
+			"eas": {
+				"projectId": "b9e125fd-8edc-4a5c-8366-eb53aaf36c65"
+			}
+		}
+	}
 }

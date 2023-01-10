@@ -88,7 +88,7 @@ const Private = () => {
 	}
 
 	const renderItem = ({ item }:any) => (
-		<Message name={item.user} text={item.message} owned={item.uid == uid ? true : false} picture={item.picture ? item.picture : ''} timestamp={item.timestamp}/>
+		<Message name={item.user} text={item.message} owned={item.uid == uid ? true : false} picture={item.picture ? item.picture : ''} timestamp={item.timestamp} currtime={item.currtime}/>
 	)
 
 	const messagesRef = ref(database, 'private/' + docName)

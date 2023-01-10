@@ -7,10 +7,11 @@ import {useState, useEffect, useContext} from 'react'
 import InputArea from '../components/Input'
 import List from '../components/List'
 import { UserContext } from '../../Context'
+import { getDatabase, ref, onValue, onChildAdded, set, push, child, get, update, remove } from "firebase/database";
 
 export default function Global(props:any) {
-	const messagesRef = query(collection(db, 'global'), orderBy('timestamp'))
-	const [messages] = useCollectionData(messagesRef)
+	const database = getDatabase()
+	const [messages, setMessages] = useState<any>([])
 	const {name, loginstate, uid} = useContext(UserContext) 
 	const [currmessage, setCurrmessage] = useState('')
 
@@ -40,13 +41,13 @@ export default function Global(props:any) {
 	}
 
 	const send = (text:string) => {
+		const time = new Date()
 		text != "" && name != "" && uid != "" ? 
-		addDoc(collection(db, 'global'), {
+		set(ref(database, 'global/' + time), {
 			user: name,
 			uid: uid,
 			message: text,
 			reacts: 0,
-			timestamp: new Date(),
 			replies: ''
 		}) : console.log(text)
 		setCurrmessage("")
@@ -61,8 +62,26 @@ export default function Global(props:any) {
 	}
 
 	const renderItem = ({ item }:any) => (
-		<Message name={item.user} text={item.message} owned={item.uid == uid ? true : false} picture={item.picture ? item.picture : ''} timestamp={item.timestamp}/>
+		<Message name={item.user} text={item.message} owned={item.uid == uid ? true : false} picture={item.picture ? item.picture : ''} timestamp={item.timestamp} currtime={item.currtime}/>
 	)
+
+	const messagesRef = ref(database, 'global/')
+	useEffect(() => {
+		const unsubscribe = onValue(messagesRef, (snapshot:any) => {
+			const arr = []
+			const data = snapshot.val()
+			const keys = Object.keys(data)
+			for (let i = 0; i < keys.length; i++) {
+				let k = keys[i]
+				let toPush = data[k]
+				toPush.timestamp = i
+				toPush.currtime = k
+				arr.push(toPush)
+			}
+			setMessages(arr.reverse())
+		})
+		return unsubscribe
+	}, [])
 
 	return (
 		<SafeAreaView style={styles.body}>
