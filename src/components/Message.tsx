@@ -2,6 +2,7 @@ import { View, Text } from 'react-native';
 import { StyleSheet } from 'react-native';
 
 export default function Message(props:any) {
+	const time = props.timestamp.seconds ? props.timestamp.seconds : props.currtime
     return (
         <Text style={props.owned ? {paddingBottom: 10, alignSelf: 'flex-end'} : {paddingBottom: 10, maxWidth: 300}}>
             <View style={styles.main}>
