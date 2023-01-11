@@ -5,8 +5,7 @@
 import { useState, useEffect, useRef, useContext, useCallback } from 'react'
 import { db } from '../Firebase'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
-import { query, collection, orderBy } from 'firebase/firestore'
-import { getDatabase, ref, onValue, onChildAdded, set, push, child, get, update, remove } from "firebase/database";
+import { getDatabase, ref, onValue, onChildAdded, set, push, child, get, update, remove, query, orderByKey } from "firebase/database";
 import { UserContext, PrivateChatContext } from '../../Context'
 import {Alert, StyleSheet, Modal, Button, View, Text, TouchableOpacity, TextInput} from 'react-native'
 import { Video, AVPlaybackStatus } from 'expo-av'
@@ -171,24 +170,26 @@ const VideoPlayer = (props:any) => {
 	const {uid, privatechat} = useContext(UserContext)
 	let userArr = [uid, privatechat]
 	userArr = userArr.sort()
-	const docName = "video" + userArr[0] + userArr[1]
+	const docName = userArr[0] + userArr[1]
 	const [vid, setVid] = useState<any>([])
 	const [view, setView] = useState('selector')
 	const [uri, setUri] = useState("https://rr3---sn-gwpa-nia6.googlevideo.com/videoplayback?expire=1673032962&ei=oiC4Y5WsCcWmgQebwobYCA&ip=2a01%3A4f8%3A1c1e%3A5d0c%3A%3A1&id=o-AMRqeJa6yXgcwb_1nuHFCt3JgnCD9KoUbBvGNIVcDRCe&itag=397&source=youtube&requiressl=yes&vprv=1&mime=video%2Fmp4&gir=yes&clen=10104876&dur=128.962&lmt=1639878521826165&keepalive=yes&fexp=24007246&c=ANDROID&txp=5532434&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Cmime%2Cgir%2Cclen%2Cdur%2Clmt&sig=AOq0QJ8wRgIhAOKR66MuQnCPCGkzlM9rST1PEuPPj27tTJFjUmAfp7yqAiEAzLJp8HXoCSaYg6R6qX9FkxgFLz0argVWXyFDTYTtgPo%3D&redirect_counter=1&rm=sn-4g5erd7e&req_id=d9167751bb0aa3ee&cms_redirect=yes&ipbypass=yes&mh=GJ&mip=2409:4066:e1b:36c6:f470:9a79:cb54:e64f&mm=31&mn=sn-gwpa-nia6&ms=au&mt=1673011080&mv=m&mvi=3&pcm2cms=yes&pl=41&lsparams=ipbypass,mh,mip,mm,mn,ms,mv,mvi,pcm2cms,pl&lsig=AG3C_xAwRQIgbSIML_Yr75GjWgL-mbQFGIGfG51zo8ie8E5jQ4rpcAYCIQCWBjXyyFiqI5hiDcoAHQlgW5RxV1YATHiLNF9KgJRf6w%3D%3D")
-	const vidRef = ref(database, 'videos/' + docName)
+	const vidRef = query(ref(database, 'videos/' + docName), orderByKey())
 	useEffect(() => {
 		const unsubscribe = onValue(vidRef, (snapshot) => {
 			const arr = []
 			const data = snapshot.val()
-			const keys = Object.keys(data)
-			for (let i = 0; i < keys.length; i++) {
-				const k = keys[i]
-				let toPush = data[k]
-				toPush.timestamp = i
-				toPush.currtime = k
-				arr.push(toPush)
-			}
+			if (data != null) {
+				const keys = Object.keys(data)
+				for (let i = 0; i < keys.length; i++) {
+					const k = keys[i]
+					let toPush = data[k]
+					toPush.key = k
+					toPush.index = i
+					arr.push(toPush)
+				}
 			setVid(arr)
+			}
 		})
 		return unsubscribe
 	}, [])

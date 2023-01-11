@@ -3,8 +3,8 @@ import { useState, useEffect, useContext } from 'react'
 import { UserContext, PrivateChatContext } from '../../Context'
 import { db } from '../Firebase'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
-import { addDoc, query, collection, orderBy, getDocs, doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore'
-import { getDatabase, ref, onValue, onChildAdded, set, push, child, get, update, remove } from "firebase/database";
+import { addDoc, collection, orderBy, getDocs, doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore'
+import { getDatabase, ref, onValue, onChildAdded, set, push, child, get, update, remove, query, orderByKey } from "firebase/database";
 import Message from '../components/Message'
 import InputArea from '../components/Input'
 import { VideoPlayer, LinkPlayer } from './Video'
@@ -68,26 +68,34 @@ const Private = () => {
 
 	const vidUpdate = (text:any, action:any, seek:any) => {
 		const time = new Date()
-		set(ref(database, 'videos/' + 'video' + docName + '/' + time), {
+		const timestamp = time.toLocaleString('en-US', { day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true })
+		const docRef = ref(database, 'videos/' + docName)
+		const newDocRef = push(docRef)
+		set(newDocRef, {
 			user: name,
 			uid: uid,
 			action: action,
 			seek: seek,
 			uri: text,
-			timestamp: time,
+			timestamp: timestamp,
 		})
 	}
 
 	const send = (text:string) => {
 		const time = new Date()
+		const timestamp = time.toLocaleString('en-US', { day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true })
+		const docRef = ref(database, 'private/' + docName)
+		const newDocRef = push(docRef)
 		setCurrmessage("")
 		text != "" && name != "" && uid != "" ? 
-		set(ref(database, 'private/' + docName + '/' + time), {
+		set(newDocRef, {
 			user: name,
 			uid: uid,
+			timestamp: timestamp,
 			message: text,
 			reacts: 0,
-			replies: ''
+			replies: '',
+			read: false,
 		}) :
 		setCurrmessage("")
 	}
@@ -100,20 +108,22 @@ const Private = () => {
 		<Message name={item.user} text={item.message} owned={item.uid == uid ? true : false} picture={item.picture ? item.picture : ''} timestamp={item.timestamp} currtime={item.currtime}/>
 	)
 
-	const messagesRef = ref(database, 'private/' + docName)
+	const messagesRef = query(ref(database, 'private/' + docName), orderByKey())
 	useEffect(() => {
 		const unsubscribe = onValue(messagesRef, (snapshot:any) => {
 			const arr = []
 			const data = snapshot.val()
-			const keys = Object.keys(data)
-			for (let i = 0; i < keys.length; i++) {
-				let k = keys[i]
-				let toPush = data[k]
-				toPush.timestamp = i
-				toPush.currtime = k
-				arr.push(toPush)
+			if (data != null) {
+				const keys = Object.keys(data)
+				for (let i=0; i<keys.length; i++) {
+					const k = keys[i]
+					let toPush = data[k]
+					toPush.key = k
+					toPush.index = i
+					arr.push(toPush)
+				}
+				setMessages(arr.reverse())
 			}
-			setMessages(arr.reverse())
 		})
 		return unsubscribe
 	}, [])
@@ -135,8 +145,11 @@ const Private = () => {
 
 	useEffect(() => {
 		const message = messages[0]
-		if (message && message.uid != uid) {
+		if (message && message.uid != uid && message.read == false) {
 			notify(message.user, message.message, 'Private Chat')
+			update(ref(database, 'private/' + docName + '/' + message.currtime), {
+				read: true
+			})
 		}
 	}, [messages])
 

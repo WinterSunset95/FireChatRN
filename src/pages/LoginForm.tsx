@@ -99,11 +99,11 @@ const LoginForm = (props:any) => {
 				Alert.alert(
 					"Logged in as " + result.user.displayName!
 				)
-				props.navigation.navigate('Global')
+				props.navigation.navigate('Home')
 			}
 		})
 		.catch((error) => {
-			props.navigation.navigate('Global')
+			props.navigation.navigate('Home')
 			console.log(error)
 			Alert.alert (
 				"Failed to login"
@@ -132,11 +132,11 @@ const LoginForm = (props:any) => {
 					Alert.alert(
 						"Logged in as " + result.user.displayName!
 					)
-					props.navigation.navigate('Global')
+					props.navigation.navigate('Home')
 				}
 			})
 			.catch((error) => {
-				props.navigation.navigate('Global')
+				props.navigation.navigate('Home')
 				console.log(error)
 				Alert.alert (
 					"Failed to create user"
@@ -156,7 +156,7 @@ const LoginForm = (props:any) => {
 			>
 				<TouchableOpacity
 					style={{marginBottom: 20, alignSelf: 'flex-end'}}
-					onPress={() => props.navigation.navigate('Global')}
+					onPress={() => props.navigation.navigate('Home')}
 				>
 					<FontAwesomeIcon icon={faCircleXmark} size={30} color='black'/>
 				</TouchableOpacity>

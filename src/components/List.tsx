@@ -10,7 +10,7 @@ const List = (props:any) => {
 			inverted={true}
 			data={props.messages}
 			renderItem={props.renderItem}
-			keyExtractor={item => item.timestamp.seconds ? item.timestamp.seconds : item.timestamp}
+			keyExtractor={item => item.index}
 		/>
 	)
 }

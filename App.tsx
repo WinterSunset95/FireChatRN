@@ -1,12 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import { Alert, StyleSheet, Text, View } from 'react-native';
+import { Alert, SafeAreaView, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import Global from './src/pages/Global'
 import { UserContext } from './Context'
-import Header from './src/components/Header';
-import Users from './src/pages/Users';
 import LoginForm from './src/pages/LoginForm';
 import Private from './src/pages/Private'
 import Home from './src/pages/Home'
+import Menu from './src/pages/Menu'
 import { useState, useEffect, createContext, useContext, createRef } from 'react'
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -14,6 +13,9 @@ import { getAuth, GoogleAuthProvider, onAuthStateChanged, signOut, createUserWit
 import { db } from './src/Firebase'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { addDoc, query, collection, orderBy, getDocs, doc, getDoc, setDoc } from 'firebase/firestore'
+import styles from './src/stylesheets/Main';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faBars } from '@fortawesome/free-solid-svg-icons'
 
 const Stack = createNativeStackNavigator()
 
@@ -89,20 +91,50 @@ export default function App() {
 		)
 	}
 
+	const LoginScreen = () => {
+		return (
+			<LoginForm navigation={useNavigation()} />
+		)
+	}
+
+	const MenuScreen = () => {
+		return (
+			<Menu navigation={useNavigation()} />
+		)
+	}
+
+	const Header = (props:any) => {
+		return (
+			<View style={[styles.header]}>
+				<View style={[styles.headerTextField]}>
+					<Image
+						style={[styles.headerImage]}
+						source={require('./assets/fire_chat_1024.png')}
+					/>
+					<Text style={[styles.headerText]}>{name ? name : ''}</Text>
+				</View>
+				<TouchableOpacity onPress={() => props.navigation.navigate('Menu')}>
+					<FontAwesomeIcon icon={faBars} size={30} color="black" />
+				</TouchableOpacity>
+			</View>
+		)
+	}
+
+
   return (
-		<UserContext.Provider value={{name, setName, loginstate, setLoginstate, uid, setUid, login, logOut, users, privatechat, setPrivatechat, videostat, setVideostat, notif, setNotif}}>
-				<StatusBar hidden={true} />
+		<UserContext.Provider value={{name, setName, loginstate, setLoginstate, uid, setUid, login, logOut, users, privatechat, setPrivatechat, videostat, setVideostat, notif, setNotif }}>
+			<StatusBar style='auto' />
+			<SafeAreaView style={{ flex: 1 }}>
 				<NavigationContainer independent={true}>
-					<Stack.Navigator
-					screenOptions={{
-						headerShown: false
-					}}
-					>
-						<Stack.Screen name="Home" component={HomeScreen}/>
+					<Stack.Navigator>
+						<Stack.Screen name="Home" component={HomeScreen} options={{ headerTitle: () => <Header navigation={useNavigation()} /> }}/>
 						<Stack.Screen name="Private" component={Private}/>
 						<Stack.Screen name="Global" component={Global} />
+						<Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+						<Stack.Screen name="Menu" component={MenuScreen} />
 					</Stack.Navigator>
 				</NavigationContainer>
+			</SafeAreaView>
 		</UserContext.Provider>
   );
 }

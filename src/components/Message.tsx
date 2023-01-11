@@ -2,15 +2,15 @@ import { View, Text } from 'react-native';
 import { StyleSheet } from 'react-native';
 
 export default function Message(props:any) {
-	const time = props.timestamp.seconds ? props.timestamp.seconds : props.currtime
+	const time = props.timestamp
     return (
         <Text style={props.owned ? {paddingBottom: 10, alignSelf: 'flex-end'} : {paddingBottom: 10, maxWidth: 300}}>
             <View style={styles.main}>
-                <Text style={props.owned ? {color: 'white'} : styles.whiteText}>{props.name}</Text>
+                <Text style={styles.whiteText}>{props.name}</Text>
                 <View style={styles.secondary}>
                     <Text style={styles.blackText}>{props.text}</Text>
                 </View>
-				<Text>{time}</Text>
+				<Text style={[styles.whiteText]}>{time}</Text>
             </View>
         </Text>
     )
