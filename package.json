@@ -13,6 +13,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@fortawesome/react-native-fontawesome": "^0.3.0",
     "@react-native-community/blur": "^4.3.0",
+    "@react-navigation/drawer": "^6.5.7",
     "@react-navigation/material-top-tabs": "^6.5.2",
     "@react-navigation/native": "^6.0.16",
     "@react-navigation/native-stack": "^6.9.4",

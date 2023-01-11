@@ -83,13 +83,24 @@ export default function App() {
 		checkAuthState()
 	}, [name])
 
+	const HomeScreen = () => {
+		return (
+			<Home navigation={useNavigation()} />
+		)
+	}
+
   return (
 		<UserContext.Provider value={{name, setName, loginstate, setLoginstate, uid, setUid, login, logOut, users, privatechat, setPrivatechat, videostat, setVideostat, notif, setNotif}}>
-				<StatusBar style="auto" />
+				<StatusBar hidden={true} />
 				<NavigationContainer independent={true}>
-					<Stack.Navigator>
-						<Stack.Screen name="Home" component={() => <Home navigation={useNavigation()} />}/>
-						<Stack.Screen name="Private" component={() => <Private />}/>
+					<Stack.Navigator
+					screenOptions={{
+						headerShown: false
+					}}
+					>
+						<Stack.Screen name="Home" component={HomeScreen}/>
+						<Stack.Screen name="Private" component={Private}/>
+						<Stack.Screen name="Global" component={Global} />
 					</Stack.Navigator>
 				</NavigationContainer>
 		</UserContext.Provider>

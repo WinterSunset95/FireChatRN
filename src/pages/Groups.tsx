@@ -7,23 +7,14 @@ const Groups = (props:any) => {
 	const {uid, users, setPrivatechat} = useContext(UserContext)
 	return (
 		<View style={[styles.main]}>
-			{
-				users ? users.map((user:any) => {
-					return (
-						<TouchableOpacity key={user.uid} style={[styles.user]} onPress={() => {
-							if (uid != user.uid) {
-								props.navigation.navigate('Private')
-								setPrivatechat(user.uid)
-							} else {
-								Alert.alert('YOU CANNOT CHAT WITH YOURSELF MF')
-							}
-							}}>
-							<Image style={[styles.pic]} source={{ uri: user.picture != null ? user.picture : 'https://avatars.dicebear.com/api/bottts/' + user.name + '.png' }} />
-							<Text>{user.name}</Text>
-						</TouchableOpacity>
-					)
-				}) : null
-			}
+			<TouchableOpacity style={styles.user}
+			onPress={() => {
+				props.navigation.navigate('Global')
+			}}
+			>
+				<Image style={[styles.pic]} source={{ uri: 'https://avatars.dicebear.com/api/bottts/globalchat.png' }} />
+				<Text>Global Chat</Text>
+			</TouchableOpacity>
 		</View>
 	)
 }
