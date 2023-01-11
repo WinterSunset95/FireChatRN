@@ -13,6 +13,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@fortawesome/react-native-fontawesome": "^0.3.0",
     "@react-native-community/blur": "^4.3.0",
+    "@react-navigation/material-top-tabs": "^6.5.2",
     "@react-navigation/native": "^6.0.16",
     "@react-navigation/native-stack": "^6.9.4",
     "chatgpt": "^2.0.1",
@@ -20,8 +21,11 @@
     "expo": "~47.0.8",
     "expo-app-auth": "~11.1.0",
     "expo-av": "~13.0.2",
+    "expo-device": "~5.0.0",
     "expo-google-app-auth": "~8.3.0",
+    "expo-notifications": "~0.17.0",
     "expo-status-bar": "~1.4.2",
+    "expo-updates": "~0.15.6",
     "firebase": "^9.14.0",
     "react": "18.1.0",
     "react-dom": "18.1.0",
@@ -37,10 +41,7 @@
     "react-redux": "^8.0.5",
     "readable-stream": "^4.3.0",
     "stream": "^0.0.2",
-    "ytdl-core": "^4.11.2",
-    "expo-updates": "~0.15.6",
-    "expo-notifications": "~0.17.0",
-    "expo-device": "~5.0.0"
+    "ytdl-core": "^4.11.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

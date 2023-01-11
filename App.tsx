@@ -6,6 +6,7 @@ import Header from './src/components/Header';
 import Users from './src/pages/Users';
 import LoginForm from './src/pages/LoginForm';
 import Private from './src/pages/Private'
+import Home from './src/pages/Home'
 import { useState, useEffect, createContext, useContext, createRef } from 'react'
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -85,12 +86,10 @@ export default function App() {
   return (
 		<UserContext.Provider value={{name, setName, loginstate, setLoginstate, uid, setUid, login, logOut, users, privatechat, setPrivatechat, videostat, setVideostat, notif, setNotif}}>
 				<StatusBar style="auto" />
-				<NavigationContainer >
+				<NavigationContainer independent={true}>
 					<Stack.Navigator>
-						<Stack.Screen name="Global" component={Global} options={{ headerTitle: () => <Header title="Global Chat" to="Users" navigation={useNavigation()}/>, headerStyle: {backgroundColor: 'black'}, headerBackVisible: false}}/>
-						<Stack.Screen name="Login" component={() => <LoginForm navigation={useNavigation()} />} options={{headerShown: false}}/>
-						<Stack.Screen name="Users" component={Users} options={{ headerTitle: () => <Header title="User List" to="Global" navigation={useNavigation()}/>, headerStyle: {backgroundColor: 'black'}, headerBackVisible: false}}/>
-						<Stack.Screen name="Private" component={Private} options={{ headerTitle: () => <Header title="PrivateChat" to="Users" navigation={useNavigation()}/>, headerStyle: {backgroundColor: 'black'}, headerBackVisible: false}}/>
+						<Stack.Screen name="Home" component={() => <Home navigation={useNavigation()} />}/>
+						<Stack.Screen name="Private" component={() => <Private />}/>
 					</Stack.Navigator>
 				</NavigationContainer>
 		</UserContext.Provider>
