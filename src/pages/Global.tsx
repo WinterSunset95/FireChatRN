@@ -12,18 +12,9 @@ import InputArea from '../components/Input'
 import List from '../components/List'
 import { UserContext } from '../../Context'
 import { getDatabase, ref, onValue, onChildAdded, set, push, child, get, update, remove, query, orderByKey } from "firebase/database";
-import * as Notifications from 'expo-notifications'
 import styles from '../stylesheets/Main'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faBackward, faArrowRotateBack } from '@fortawesome/free-solid-svg-icons'
-
-Notifications.setNotificationHandler({
-	handleNotification: async () => ({
-		shouldShowAlert: true,
-		shouldPlaySound: true,
-		shouldSetBadge: true,
-	}),
-})
 
 export default function Global(props:any) {
 	const database = getDatabase()
@@ -83,7 +74,7 @@ export default function Global(props:any) {
 	}
 
 	const renderItem = ({ item }:any) => (
-		<Message name={item.user} text={item.message} owned={item.uid == uid ? true : false} picture={item.picture ? item.picture : ''} timestamp={item.timestamp} currtime={item.currtime}/>
+		<Message message={item} owned={item.uid == uid ? true : false} />
 	)
 
 	const messagesRef = query(ref(database, 'global/'), orderByKey())
@@ -106,21 +97,9 @@ export default function Global(props:any) {
 		return unsubscribe
 	}, [])
 
-	async function notify(user:any, text:any, group:any) {
-		await Notifications.scheduleNotificationAsync({
-			content: {
-				title: user + ':  ' + group,
-				body: text,
-				data: { data: 'goes here' },
-			},
-			trigger: null
-		})
-	}
-
 	useEffect(() => {
 		const message = messages[0]
 		if (message && message.uid != uid && message.read == false) {
-			notify(message.user, message.message, 'Global')
 			update(ref(database, 'global/' + message.currtime), {
 				read: true
 			})

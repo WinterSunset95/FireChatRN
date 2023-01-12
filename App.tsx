@@ -12,14 +12,25 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { getAuth, GoogleAuthProvider, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
 import { db } from './src/Firebase'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
-import { addDoc, query, collection, orderBy, getDocs, doc, getDoc, setDoc } from 'firebase/firestore'
+import { addDoc, collection, orderBy, getDocs, doc, getDoc, setDoc } from 'firebase/firestore'
+import { getDatabase, ref, onValue, onChildAdded, set, push, child, get, update, remove, query, orderByKey, onChildChanged } from "firebase/database";
 import styles from './src/stylesheets/Main';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
+import * as Notifications from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+	handleNotification: async () => ({
+		shouldShowAlert: true,
+		shouldPlaySound: true,
+		shouldSetBadge: true,
+	}),
+})
 
 const Stack = createNativeStackNavigator()
 
 export default function App() {
+	const database = getDatabase();
 	const [name, setName] = useState('')
 	const [loginstate, setLoginstate] = useState(false)
 	const [uid, setUid] = useState('')
@@ -27,7 +38,7 @@ export default function App() {
 	const [videostat, setVideostat] = useState(false)
 	const [notif, setNotif] = useState({})
 
-	const usersref = query(collection(db, 'users'))
+	const usersref = collection(db, 'users')
 	const [users] = useCollectionData(usersref)
 
 	const collRef = collection(db, 'users')
@@ -120,6 +131,40 @@ export default function App() {
 		)
 	}
 
+	async function notify(user:any, text:any, group:any) {
+		await Notifications.scheduleNotificationAsync({
+			content: {
+				title: user + ':  ' + group,
+				body: text,
+				data: { data: 'goes here' },
+			},
+			trigger: null
+		})
+	}
+
+	const messagesRef = query(ref(database, 'private'), orderByKey())
+	useEffect(() => {
+		const unsubscribe = onChildChanged(messagesRef, (snapshot) => {
+			const arr = []
+			const data = snapshot.val()
+			if (data != null) {
+				const keys = Object.keys(data)
+				for (let i=0; i<keys.length; i++) {
+					const k = keys[i]
+					let toPush = data[k]
+					toPush.key = k
+					toPush.index = i
+					arr.push(toPush)
+				}
+			}
+			const message = arr[arr.length - 1]
+			if (message && message.uid != uid && message.read == false) {
+				console.log(message.user)
+				notify(message.user, message.message, 'Private Chat')
+			}
+		})
+		return unsubscribe
+	}, [])
 
   return (
 		<UserContext.Provider value={{name, setName, loginstate, setLoginstate, uid, setUid, login, logOut, users, privatechat, setPrivatechat, videostat, setVideostat, notif, setNotif }}>

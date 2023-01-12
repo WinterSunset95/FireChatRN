@@ -9,15 +9,6 @@ import Message from '../components/Message'
 import InputArea from '../components/Input'
 import { VideoPlayer, LinkPlayer } from './Video'
 import List from '../components/List'
-import * as Notifications from 'expo-notifications';
-
-Notifications.setNotificationHandler({
-	handleNotification: async () => ({
-		shouldShowAlert: true,
-		shouldPlaySound: true,
-		shouldSetBadge: true,
-	}),
-})
 
 const Private = () => {
 	const database = getDatabase();
@@ -105,7 +96,7 @@ const Private = () => {
 	}
 
 	const renderItem = ({ item }:any) => (
-		<Message name={item.user} text={item.message} owned={item.uid == uid ? true : false} picture={item.picture ? item.picture : ''} timestamp={item.timestamp} currtime={item.currtime}/>
+		<Message message={item} owned={item.uid == uid ? true : false} />
 	)
 
 	const messagesRef = query(ref(database, 'private/' + docName), orderByKey())
@@ -132,24 +123,14 @@ const Private = () => {
 		getChat()
 	}, [chat])
 
-	async function notify(user:any, text:any, group:any) {
-		await Notifications.scheduleNotificationAsync({
-			content: {
-				title: user + ':  ' + group,
-				body: text,
-				data: { data: 'goes here' },
-			},
-			trigger: null
-		})
-	}
-
 	useEffect(() => {
 		const message = messages[0]
 		if (message && message.uid != uid && message.read == false) {
-			notify(message.user, message.message, 'Private Chat')
-			update(ref(database, 'private/' + docName + '/' + message.currtime), {
-				read: true
-			})
+			for (let i=0; i<messages.length; i++){
+				update(ref(database, 'private/' + docName + '/' + messages[i].key), {
+					read: true
+				})
+			}
 		}
 	}, [messages])
 

@@ -39,7 +39,7 @@
 			"supportsTablet": true
 		},
 		"android": {
-			"versionCode": 3,
+			"versionCode": 4,
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/fire_chat_1024.png",
 				"backgroundColor": "#FFFFFF"

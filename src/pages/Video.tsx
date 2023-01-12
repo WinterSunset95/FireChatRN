@@ -199,9 +199,11 @@ const VideoPlayer = (props:any) => {
 			const data = vid[vid.length -1]
 			if (data.uid != uid && data.action == 'set') {
 				console.log('video set')
-				setUri(data.uri)
 				setView('player')
 				props.setVideostat(true)
+			}
+			if (data.uri != uri) {
+				setUri(data.uri)
 			}
 		}
 	}, [vid])

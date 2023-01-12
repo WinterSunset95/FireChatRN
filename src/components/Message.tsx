@@ -1,16 +1,23 @@
 import { View, Text } from 'react-native';
 import { StyleSheet } from 'react-native';
 
+
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+
 export default function Message(props:any) {
-	const time = props.timestamp
+	const time = props.message.timestamp
     return (
-        <Text style={props.owned ? {paddingBottom: 10, alignSelf: 'flex-end'} : {paddingBottom: 10, maxWidth: 300}}>
+        <Text style={props.owned ? {paddingBottom: 10, alignSelf: 'flex-end'} : {paddingBottom: 10, maxWidth: 400}}>
             <View style={styles.main}>
-                <Text style={styles.whiteText}>{props.name}</Text>
+                <Text style={styles.whiteText}>{props.message.user}</Text>
                 <View style={styles.secondary}>
-                    <Text style={styles.blackText}>{props.text}</Text>
+                    <Text style={styles.blackText}>{props.message.message}</Text>
                 </View>
-				<Text style={[styles.whiteText]}>{time}</Text>
+				<View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+					<Text style={[styles.whiteText]}>{time}</Text>
+					{props.message.read ? <FontAwesomeIcon icon={faCheckCircle} size={15} color={'#ffffff'} /> : null}
+				</View>
             </View>
         </Text>
     )
@@ -22,7 +29,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         borderRadius: 10,
         padding: 5,
-		maxWidth: 300
+		maxWidth: 400
     },
 
     secondary: {
