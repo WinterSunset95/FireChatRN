@@ -113,7 +113,7 @@ const Player = (props:any) => {
 			setData(props.vid[props.vid.length - 1])
 		}
 	}, [props.vid])
-	const BackBtn = (props:any) => {
+	const BackBtn = () => {
 		return (
 			<View style={[styles.back]}>
 				<View>
@@ -122,12 +122,16 @@ const Player = (props:any) => {
 					data.action == 'set'  ? 'Video set by ' + data.user
 					: data.action == 'play' ? 'Video playing'
 					: data.action == 'pause' ? 'Video paused at ' + data.seek + " by " + data.user
+					: data.action == 'kill' ? 'Video killed'
 					: null
 					: null}
 					</Text>
 				</View>
 				<TouchableOpacity
-					onPress={() => props.setView('selector')}
+					onPress={() => {
+						props.killvideo(props.uri)
+						props.setView('selector')
+					}}
 				>
 					<FontAwesomeIcon icon={faCircleXmark} size={30} color='white' />
 				</TouchableOpacity>
@@ -136,7 +140,7 @@ const Player = (props:any) => {
 	}
 	return (
 		<>
-			<BackBtn setView={props.setView} />
+			<BackBtn />
 			{
 				props.uri.includes('youtube.com') || props.uri.includes('youtu.be') ? <YtPlayer uri={props.uri} playvideo={props.playvideo} pausevideo={props.pausevideo} seekvideo={props.seekvideo} setView={props.setView} vid={props.vid} /> : <LinkPlayer uri={props.uri} playvideo={props.playvideo} pausevideo={props.pausevideo} seekvideo={props.seekvideo} setView={props.setView} />
 			}
@@ -173,7 +177,7 @@ const VideoPlayer = (props:any) => {
 	const docName = userArr[0] + userArr[1]
 	const [vid, setVid] = useState<any>([])
 	const [view, setView] = useState('selector')
-	const [uri, setUri] = useState("https://rr3---sn-gwpa-nia6.googlevideo.com/videoplayback?expire=1673032962&ei=oiC4Y5WsCcWmgQebwobYCA&ip=2a01%3A4f8%3A1c1e%3A5d0c%3A%3A1&id=o-AMRqeJa6yXgcwb_1nuHFCt3JgnCD9KoUbBvGNIVcDRCe&itag=397&source=youtube&requiressl=yes&vprv=1&mime=video%2Fmp4&gir=yes&clen=10104876&dur=128.962&lmt=1639878521826165&keepalive=yes&fexp=24007246&c=ANDROID&txp=5532434&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Cmime%2Cgir%2Cclen%2Cdur%2Clmt&sig=AOq0QJ8wRgIhAOKR66MuQnCPCGkzlM9rST1PEuPPj27tTJFjUmAfp7yqAiEAzLJp8HXoCSaYg6R6qX9FkxgFLz0argVWXyFDTYTtgPo%3D&redirect_counter=1&rm=sn-4g5erd7e&req_id=d9167751bb0aa3ee&cms_redirect=yes&ipbypass=yes&mh=GJ&mip=2409:4066:e1b:36c6:f470:9a79:cb54:e64f&mm=31&mn=sn-gwpa-nia6&ms=au&mt=1673011080&mv=m&mvi=3&pcm2cms=yes&pl=41&lsparams=ipbypass,mh,mip,mm,mn,ms,mv,mvi,pcm2cms,pl&lsig=AG3C_xAwRQIgbSIML_Yr75GjWgL-mbQFGIGfG51zo8ie8E5jQ4rpcAYCIQCWBjXyyFiqI5hiDcoAHQlgW5RxV1YATHiLNF9KgJRf6w%3D%3D")
+	const [uri, setUri] = useState("")
 	const vidRef = query(ref(database, 'videos/' + docName), orderByKey())
 	useEffect(() => {
 		const unsubscribe = onValue(vidRef, (snapshot) => {
@@ -201,15 +205,24 @@ const VideoPlayer = (props:any) => {
 				console.log('video set')
 				setView('player')
 				props.setVideostat(true)
+			} else if (data.action == 'kill') {
+				setUri('')
+				setView('selector')
 			}
 			if (data.uri != uri) {
 				setUri(data.uri)
 			}
 		}
 	}, [vid])
+	useEffect(() => {
+		uri != '' ? setView('player') : null
+	}, [uri])
 	return (
 		<View style={[styles.main]}>
-			{view == 'selector' ? <Selector setView={setView} setUri={setUri} setvideo={props.setvideo} /> : <Player setView={setView} uri={uri} playvideo={props.playvideo} pausevideo={props.pausevideo} seekvideo={props.seekvideo} vid={vid} /> }
+			{view == 'selector' ? <Selector 
+				setView={setView} 
+				setUri={setUri}
+				setvideo={props.setvideo} /> : <Player setView={setView} uri={uri} playvideo={props.playvideo} pausevideo={props.pausevideo} killvideo={props.killvideo} seekvideo={props.seekvideo} vid={vid} /> }
 		</View>
 	)
 }

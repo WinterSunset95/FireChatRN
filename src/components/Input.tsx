@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faPaperPlane, faVideo } from '@fortawesome/free-solid-svg-icons'
 import { useContext } from 'react'
 import {UserContext} from '../../Context'
+import 'react-native-image-keyboard'
 
 const InputArea = (props:any) => {
 	const {videostat, setVideostat} = useContext(UserContext)
@@ -26,6 +27,7 @@ const InputArea = (props:any) => {
 					onSubmitEditing={(event) => {
 						props.send(event.nativeEvent.text)
 					}}
+					onImageChange={(image) => console.log(image)}
 				/>
 				<TouchableOpacity style={styles.send} onPress={() => props.send(props.currmessage)}>
 					<FontAwesomeIcon icon={faPaperPlane} size={30} color='white' />

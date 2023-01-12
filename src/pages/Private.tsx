@@ -53,6 +53,10 @@ const Private = () => {
 		vidUpdate(text, 'play', time)
 	}
 
+	const killvideo = (text:any) => {
+		vidUpdate(text, 'kill', null)
+	}
+
 	const seekvideo = () => {
 		console.log("seekvideo")
 	}
@@ -136,7 +140,7 @@ const Private = () => {
 
 	return (
 	 <View style={{ flex: 1, height: '100%', width: '100%' }}>
-		{videostat ? <VideoPlayer setvideo={setvideo} playvideo={playvideo} pausevideo={pausevideo} seekvideo={seekvideo} setVideostat={setVideostat}/> : null}
+		{videostat ? <VideoPlayer setvideo={setvideo} playvideo={playvideo} pausevideo={pausevideo} killvideo={killvideo} seekvideo={seekvideo} setVideostat={setVideostat}/> : null}
 		<View style={styles.main}>
 			<List styles={styles} messages={messages} renderItem={renderItem}/>
 		</View>

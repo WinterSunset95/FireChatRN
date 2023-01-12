@@ -14,9 +14,9 @@ export default function Message(props:any) {
                 <View style={styles.secondary}>
                     <Text style={styles.blackText}>{props.message.message}</Text>
                 </View>
-				<View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-					<Text style={[styles.whiteText]}>{time}</Text>
-					{props.message.read ? <FontAwesomeIcon icon={faCheckCircle} size={15} color={'#ffffff'} /> : null}
+				<View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+					<Text style={[styles.whiteText, {fontSize: 10}]}>{time}</Text>
+					{props.message.read ? <FontAwesomeIcon icon={faCheckCircle} size={10} color={'#ffffff'} /> : null}
 				</View>
             </View>
         </Text>

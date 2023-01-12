@@ -35,48 +35,13 @@ export default function App() {
 	const [loginstate, setLoginstate] = useState(false)
 	const [uid, setUid] = useState('')
 	const [privatechat, setPrivatechat] = useState('0')
+	const [privatechatname, setPrivatechatname] = useState('')
 	const [videostat, setVideostat] = useState(false)
-	const [notif, setNotif] = useState({})
 
 	const usersref = collection(db, 'users')
 	const [users] = useCollectionData(usersref)
 
 	const collRef = collection(db, 'users')
-
-	const ping = async () => {
-		const res = await fetch("https://firechatbackend.winter95.repl.co/")
-		console.log(await res.json())
-	}
-
-	useEffect(() => {
-		setInterval(ping, 3600000)
-	}, [])
-
-	const checkAuthState = () => {
-		const auth = getAuth()
-		onAuthStateChanged(auth, async (user) => {
-			if (user && user.uid) {
-				setName(user.displayName ? user.displayName : user.email! )
-				setLoginstate(true)
-				setUid(user.uid!)
-				const docRef = doc(db, 'users', user.uid!)
-				const docSnap = await getDoc(docRef)
-				if (docSnap.exists()) {
-				} else {
-					await setDoc(doc(collRef, user.uid!), {
-						"email": user.email!,
-						"name": user.displayName!,
-						"picture": user.photoURL!,
-						"uid": user.uid
-					})
-				}
-			} else {
-				setLoginstate(false)
-				setUid("")
-				setName("")
-			}
-		})
-	}
 
 	const login = () => {
 		console.log("Login")
@@ -91,10 +56,6 @@ export default function App() {
 			)
 		})
 	}
-
-	useEffect(() => {
-		checkAuthState()
-	}, [name])
 
 	const HomeScreen = () => {
 		return (
@@ -122,7 +83,10 @@ export default function App() {
 						style={[styles.headerImage]}
 						source={require('./assets/fire_chat_1024.png')}
 					/>
+					<View>
 					<Text style={[styles.headerText]}>{name ? name : ''}</Text>
+					<Text>{uid ? uid : ''}</Text>
+					</View>
 				</View>
 				<TouchableOpacity onPress={() => props.navigation.navigate('Menu')}>
 					<FontAwesomeIcon icon={faBars} size={30} color="black" />
@@ -143,37 +107,62 @@ export default function App() {
 	}
 
 	const messagesRef = query(ref(database, 'private'), orderByKey())
-	useEffect(() => {
-		const unsubscribe = onChildChanged(messagesRef, (snapshot) => {
-			const arr = []
-			const data = snapshot.val()
-			if (data != null) {
-				const keys = Object.keys(data)
-				for (let i=0; i<keys.length; i++) {
-					const k = keys[i]
-					let toPush = data[k]
-					toPush.key = k
-					toPush.index = i
-					arr.push(toPush)
-				}
+	const unsubscribe = onChildChanged(messagesRef, (snapshot) => {
+		const arr = []
+		const data = snapshot.val()
+		if (data != null) {
+			const keys = Object.keys(data)
+			for (let i=0; i<keys.length; i++) {
+				const k = keys[i]
+				let toPush = data[k]
+				toPush.key = k
+				toPush.index = i
+				arr.push(toPush)
 			}
-			const message = arr[arr.length - 1]
-			if (message && message.uid != uid && message.read == false) {
-				console.log(message.user)
-				notify(message.user, message.message, 'Private Chat')
+		}
+		const message = arr[arr.length - 1]
+		if (message && message.uid != uid && message.read == false) {
+			notify(message.user, message.message, 'Private Chat')
+		}
+	})
+	useEffect(() => {
+		return unsubscribe
+	}, [name, uid, loginstate])
+
+	useEffect(() => {
+		const statechange = onAuthStateChanged(getAuth(), async (user) => {
+			if (user && user.uid) {
+				setName(user.displayName ? user.displayName : user.email! )
+				setUid(user.uid)
+				setLoginstate(true)
+				const docRef = doc(db, 'users', user.uid!)
+				const docSnap = await getDoc(docRef)
+				if (docSnap.exists()) {
+				} else {
+					await setDoc(doc(collRef, user.uid!), {
+						"email": user.email!,
+						"name": user.displayName!,
+						"picture": user.photoURL!,
+						"uid": user.uid
+					})
+				}
+			} else {
+				setLoginstate(false)
+				setUid("")
+				setName("")
 			}
 		})
-		return unsubscribe
+		return statechange
 	}, [])
 
   return (
-		<UserContext.Provider value={{name, setName, loginstate, setLoginstate, uid, setUid, login, logOut, users, privatechat, setPrivatechat, videostat, setVideostat, notif, setNotif }}>
+		<UserContext.Provider value={{name, setName, loginstate, setLoginstate, uid, login, logOut, users, privatechat, setPrivatechat, videostat, setVideostat, setPrivatechatname }}>
 			<StatusBar style='auto' />
 			<SafeAreaView style={{ flex: 1 }}>
 				<NavigationContainer independent={true}>
 					<Stack.Navigator>
 						<Stack.Screen name="Home" component={HomeScreen} options={{ headerTitle: () => <Header navigation={useNavigation()} /> }}/>
-						<Stack.Screen name="Private" component={Private}/>
+						<Stack.Screen name="Private" component={Private} options={{ headerTitle: privatechatname }}/>
 						<Stack.Screen name="Global" component={Global} />
 						<Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
 						<Stack.Screen name="Menu" component={MenuScreen} />

@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from 'react'
 import { UserContext } from '../../Context'
 
 const Users = (props:any) => {
-	const {uid, users, setPrivatechat} = useContext(UserContext)
+	const {uid, users, setPrivatechat, setPrivatechatname} = useContext(UserContext)
 	return (
 		<View style={[styles.main]}>
 			{
@@ -13,8 +13,9 @@ const Users = (props:any) => {
 							if (uid != user.uid) {
 								props.navigation.navigate('Private')
 								setPrivatechat(user.uid)
+								setPrivatechatname(user.name)
 							} else {
-								Alert.alert('YOU CANNOT CHAT WITH YOURSELF MF')
+								Alert.alert('Self chat feature not implmented')
 							}
 							}}>
 							<Image style={[styles.pic]} source={{ uri: user.picture != null ? user.picture : 'https://avatars.dicebear.com/api/bottts/' + user.name + '.png' }} />
