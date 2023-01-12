@@ -8,7 +8,7 @@ import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 export default function Message(props:any) {
 	const time = props.message.timestamp
     return (
-        <Text style={props.owned ? {paddingBottom: 10, alignSelf: 'flex-end'} : {paddingBottom: 10, maxWidth: 400}}>
+        <Text style={props.owned ? {paddingBottom: 10, alignSelf: 'flex-end', maxWidth: 350} : {paddingBottom: 10, maxWidth: 350}}>
             <View style={styles.main}>
                 <Text style={styles.whiteText}>{props.message.user}</Text>
                 <View style={styles.secondary}>

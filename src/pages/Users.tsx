@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from 'react'
 import { UserContext } from '../../Context'
 
 const Users = (props:any) => {
-	const {uid, users, setPrivatechat, setPrivatechatname} = useContext(UserContext)
+	const {uid, users, setPrivatechat, setPrivatechatname, setScreen} = useContext(UserContext)
 	return (
 		<View style={[styles.main]}>
 			{
@@ -14,6 +14,7 @@ const Users = (props:any) => {
 								props.navigation.navigate('Private')
 								setPrivatechat(user.uid)
 								setPrivatechatname(user.name)
+								setScreen('private')
 							} else {
 								Alert.alert('Self chat feature not implmented')
 							}

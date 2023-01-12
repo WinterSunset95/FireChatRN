@@ -6,8 +6,8 @@ import {UserContext} from '../../Context'
 import 'react-native-image-keyboard'
 
 const InputArea = (props:any) => {
-	const {videostat, setVideostat} = useContext(UserContext)
-	if (props.loginstate) {
+	const {videostat, setVideostat, login, loginstate} = useContext(UserContext)
+	if (loginstate) {
 		return (
 			<KeyboardAvoidingView style={[styles.foot]}
 			>
@@ -39,7 +39,7 @@ const InputArea = (props:any) => {
 			<KeyboardAvoidingView style={[styles.foot]}>
 				<Button
 					title='Login to send message'
-					onPress={props.login}
+					onPress={login}
 				/>
 			</KeyboardAvoidingView>
 		)

@@ -6,37 +6,28 @@ import LoginForm from './src/pages/LoginForm';
 import Private from './src/pages/Private'
 import Home from './src/pages/Home'
 import Menu from './src/pages/Menu'
-import { useState, useEffect, createContext, useContext, createRef } from 'react'
+import Notification from './src/components/Notification';
+import { useState, useEffect, createContext, useContext, createRef, useRef } from 'react'
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { getAuth, GoogleAuthProvider, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
 import { db } from './src/Firebase'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { addDoc, collection, orderBy, getDocs, doc, getDoc, setDoc } from 'firebase/firestore'
-import { getDatabase, ref, onValue, onChildAdded, set, push, child, get, update, remove, query, orderByKey, onChildChanged } from "firebase/database";
 import styles from './src/stylesheets/Main';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
-import * as Notifications from 'expo-notifications';
-
-Notifications.setNotificationHandler({
-	handleNotification: async () => ({
-		shouldShowAlert: true,
-		shouldPlaySound: true,
-		shouldSetBadge: true,
-	}),
-})
 
 const Stack = createNativeStackNavigator()
 
 export default function App() {
-	const database = getDatabase();
 	const [name, setName] = useState('')
 	const [loginstate, setLoginstate] = useState(false)
 	const [uid, setUid] = useState('')
 	const [privatechat, setPrivatechat] = useState('0')
 	const [privatechatname, setPrivatechatname] = useState('')
 	const [videostat, setVideostat] = useState(false)
+	const [screen, setScreen] = useState('home')
 
 	const usersref = collection(db, 'users')
 	const [users] = useCollectionData(usersref)
@@ -95,39 +86,6 @@ export default function App() {
 		)
 	}
 
-	async function notify(user:any, text:any, group:any) {
-		await Notifications.scheduleNotificationAsync({
-			content: {
-				title: user + ':  ' + group,
-				body: text,
-				data: { data: 'goes here' },
-			},
-			trigger: null
-		})
-	}
-
-	const messagesRef = query(ref(database, 'private'), orderByKey())
-	const unsubscribe = onChildChanged(messagesRef, (snapshot) => {
-		const arr = []
-		const data = snapshot.val()
-		if (data != null) {
-			const keys = Object.keys(data)
-			for (let i=0; i<keys.length; i++) {
-				const k = keys[i]
-				let toPush = data[k]
-				toPush.key = k
-				toPush.index = i
-				arr.push(toPush)
-			}
-		}
-		const message = arr[arr.length - 1]
-		if (message && message.uid != uid && message.read == false) {
-			notify(message.user, message.message, 'Private Chat')
-		}
-	})
-	useEffect(() => {
-		return unsubscribe
-	}, [name, uid, loginstate])
 
 	useEffect(() => {
 		const statechange = onAuthStateChanged(getAuth(), async (user) => {
@@ -154,10 +112,14 @@ export default function App() {
 		})
 		return statechange
 	}, [])
+	useEffect(() => {
+		console.log(screen)
+	}, [screen])
 
   return (
-		<UserContext.Provider value={{name, setName, loginstate, setLoginstate, uid, login, logOut, users, privatechat, setPrivatechat, videostat, setVideostat, setPrivatechatname }}>
+		<UserContext.Provider value={{name, setName, loginstate, setLoginstate, uid, login, logOut, users, privatechat, setPrivatechat, videostat, setVideostat, setPrivatechatname, screen, setScreen }}>
 			<StatusBar style='auto' />
+			{uid != '' && screen != 'private' ? <Notification privatechat={privatechat} /> : null}
 			<SafeAreaView style={{ flex: 1 }}>
 				<NavigationContainer independent={true}>
 					<Stack.Navigator>

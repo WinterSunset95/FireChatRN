@@ -100,9 +100,11 @@ export default function Global(props:any) {
 	useEffect(() => {
 		const message = messages[0]
 		if (message && message.uid != uid && message.read == false) {
-			update(ref(database, 'global/' + message.currtime), {
-				read: true
-			})
+			for (let i=0; i<messages.length; i++){
+				update(ref(database, 'global/' + messages[i].key), {
+					read: true
+				})
+			}
 		}
 	}, [messages])
 

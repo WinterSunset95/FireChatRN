@@ -19,7 +19,7 @@ import styles from '../stylesheets/Main';
 const Tab = createMaterialTopTabNavigator()
 
 const Home = (props:any) => {
-	const {drawer, setDrawer, loginstate, logOut} = useContext(UserContext)
+	const {setScreen} = useContext(UserContext)
 	const UsersTab = () => {
 		return (
 			<Users navigation={props.navigation}/>
@@ -30,6 +30,14 @@ const Home = (props:any) => {
 			<Groups navigation={props.navigation}/>
 		)
 	}
+
+	useEffect(() => {
+		const unsubscribe = props.navigation.addListener('focus', (x:any) => {
+			console.log(x)
+			setScreen('home')
+		});
+		return unsubscribe;
+	}, [props.navigation])
 
 	return (
 		<View style={[styles.fullFlex]}>

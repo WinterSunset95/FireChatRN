@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View, Text, KeyboardAvoidingView, TouchableOpacity, TextInput, Button } from 'react-native'
 import { useState, useEffect, useContext } from 'react'
 import { UserContext, PrivateChatContext } from '../../Context'
 import { db } from '../Firebase'
@@ -6,13 +6,55 @@ import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { addDoc, collection, orderBy, getDocs, doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { getDatabase, ref, onValue, onChildAdded, set, push, child, get, update, remove, query, orderByKey } from "firebase/database";
 import Message from '../components/Message'
-import InputArea from '../components/Input'
 import { VideoPlayer, LinkPlayer } from './Video'
 import List from '../components/List'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faPaperPlane, faVideo } from '@fortawesome/free-solid-svg-icons'
+
+	const InputArea = (props:any) => {
+		const {videostat, setVideostat, login, loginstate} = useContext(UserContext)
+		if (loginstate) {
+			return (
+				<KeyboardAvoidingView style={[styles.foot]}
+				>
+					<TouchableOpacity style={styles.send} onPress={() => setVideostat(!videostat)}>
+						<FontAwesomeIcon icon={faVideo} size={30} color='white' />
+					</TouchableOpacity>
+					<TextInput
+						placeholder='Message'
+						style={[styles.input]}	
+						onChangeText={(text) => {
+							props.setCurrmessage(text)
+						}}
+						defaultValue={props.currmessage}
+						value={props.currmessage}
+						autoFocus={true}
+						blurOnSubmit={false}
+						onSubmitEditing={(event) => {
+							props.send(event.nativeEvent.text)
+						}}
+						onImageChange={(image) => console.log(image)}
+					/>
+					<TouchableOpacity style={styles.send} onPress={() => props.send(props.currmessage)}>
+						<FontAwesomeIcon icon={faPaperPlane} size={30} color='white' />
+					</TouchableOpacity>
+				</KeyboardAvoidingView>
+			)
+		} else {
+			return (
+				<KeyboardAvoidingView style={[styles.foot]}>
+					<Button
+						title='Login to send message'
+						onPress={login}
+					/>
+				</KeyboardAvoidingView>
+			)
+		}
+	}
 
 const Private = () => {
 	const database = getDatabase();
-	const {name, loginstate, uid, login, privatechat, videostat, setVideostat, notif, setNotif} = useContext(UserContext)
+	const {name, loginstate, uid, login, privatechat, videostat, setVideostat, setScreen} = useContext(UserContext)
 	let userArr = [uid, privatechat]
 	userArr = userArr.sort()
 	const docName = userArr[0] + userArr[1]
@@ -34,6 +76,7 @@ const Private = () => {
 				picture: docSnap.data().picture,
 				uid: docSnap.data().uid
 			})
+			console.log('user found')
 		} else {
 			console.log('user does not exist')
 		}
@@ -125,7 +168,7 @@ const Private = () => {
 
 	useEffect(() => {
 		getChat()
-	}, [chat])
+	}, [])
 
 	useEffect(() => {
 		const message = messages[0]
@@ -157,7 +200,27 @@ const styles = StyleSheet.create({
 		alignItems: 'flex-start',
 		width: '100%',
 	},
+	input: {
+		backgroundColor: 'white',
+		height: 40,
+		width: '80%',
+		borderRadius: 20,
+		padding: 10,
+	},
 
+	send: {
+		padding: 10,
+	},
+
+	foot: {
+		flex: 0,
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
+		height: 80,
+		width: '100%',
+		backgroundColor: 'black'
+	},
 })
 
 export default Private
