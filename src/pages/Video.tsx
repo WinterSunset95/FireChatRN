@@ -209,7 +209,7 @@ const VideoPlayer = (props:any) => {
 				setUri('')
 				setView('selector')
 			}
-			if (data.uri != uri) {
+			if (data.action != 'kill' && data.uri != uri) {
 				setUri(data.uri)
 			}
 		}
